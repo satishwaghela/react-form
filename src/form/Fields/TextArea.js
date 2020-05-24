@@ -4,7 +4,7 @@ import { String } from './String';
 
 export class TextArea extends String {
   getField = () => {
-    const { data, fieldKeyPath } = this.props;
+    const { fieldKeyPath } = this.props;
     return (
       <textarea
         className={
@@ -13,7 +13,7 @@ export class TextArea extends String {
             : 'form-control'
         }
         ref='input'
-        value={_.get(data, fieldKeyPath, '')}
+        value={this.getValue(fieldKeyPath)}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         onChange={this.handleChange}

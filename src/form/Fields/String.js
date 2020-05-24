@@ -4,19 +4,19 @@ import { BaseField } from './BaseField';
 
 export class String extends BaseField {
   handleChange = () => {
-    const { data, fieldKeyPath } = this.props;
+    const { fieldKeyPath } = this.props;
     const value = this.refs.input.value;
-    _.set(data, fieldKeyPath, value);
+    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 
   validate () {
-    const { data, fieldKeyPath } = this.props;
-    return super.validate(_.get(data, fieldKeyPath));
+    const { fieldKeyPath } = this.props;
+    return super.validate(this.getValue(fieldKeyPath));
   }
 
   getField = () => {
-    const { data, fieldKeyPath } = this.props;
+    const { fieldKeyPath } = this.props;
     return (
       <input
         type='text' className={
@@ -25,7 +25,7 @@ export class String extends BaseField {
             : 'form-control'
         }
         ref='input'
-        value={_.get(data, fieldKeyPath, '')}
+        value={this.getValue(fieldKeyPath, '')}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         onChange={this.handleChange}

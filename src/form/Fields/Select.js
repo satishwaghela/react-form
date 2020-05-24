@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import ReactSelect from 'react-select';
 import { BaseField } from './BaseField';
 import { findSingleValueOption } from '../FormUtils';
@@ -7,14 +6,14 @@ import { findSingleValueOption } from '../FormUtils';
 export class Select extends BaseField {
   handleChange = (selection) => {
     const value = selection.value;
-    const { data, fieldKeyPath } = this.props;
-    _.set(data, fieldKeyPath, value);
+    const { fieldKeyPath } = this.props;
+    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 
   getValue = () => {
-    const { data, attrs, fieldKeyPath } = this.props;
-    const val = _.get(data, fieldKeyPath);
+    const { attrs, fieldKeyPath } = this.props;
+    const val = super.getValue(fieldKeyPath);
     return findSingleValueOption(val, attrs.options, attrs.defaultValue);
   }
 

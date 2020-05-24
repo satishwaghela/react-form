@@ -4,26 +4,25 @@ import { BaseField } from './BaseField';
 
 export class CheckBoxGroup extends BaseField {
   handleChange = (e, option) => {
-    const { data, fieldKeyPath } = this.props;
-    const selected = _.get(data, fieldKeyPath, []);
+    const { fieldKeyPath } = this.props;
+    const selected = this.getValue(fieldKeyPath, []);
     const index = selected.indexOf(option);
     if (index >= 0) {
       selected.splice(index, 1);
     } else {
       selected.push(option.value);
     }
-    _.set(data, fieldKeyPath, selected);
+    this.setValue(fieldKeyPath, selected);
     super.handleChange(selected);
   }
 
   validate () {
-    const { data, fieldKeyPath } = this.props;
-    return super.validate(_.get(data, fieldKeyPath));
+    return super.validate(this.getValue());
   }
 
   getField = () => {
-    const { options, data, fieldKeyPath } = this.props;
-    const selected = _.get(data, fieldKeyPath, []);
+    const { options, fieldKeyPath } = this.props;
+    const selected = this.getValue(fieldKeyPath, []);
     return (
       <fieldset className='fieldset-default'>
         <legend>{this.props.label}</legend>

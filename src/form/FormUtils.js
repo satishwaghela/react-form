@@ -29,6 +29,8 @@ export function validateFields (fields) {
   _.each(fields, (component) => {
     if (component.type === 'FormField') {
       component.validate();
+    } else if (_.isArray(component) || _.isObject(component)) {
+      validateFields(component);
     }
   });
 }
@@ -43,6 +45,8 @@ export function areFieldsValid (fields) {
       if (isValid) {
         isValid = isFieldValid;
       }
+    } else if (_.isArray(component) || _.isObject(component)) {
+      isValid = areFieldsValid(component);
     }
   });
   return isValid;

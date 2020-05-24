@@ -31,8 +31,8 @@ export class BaseField extends Component {
   }
 
   isValid (value, fieldValidations) {
-    const { data, fieldKeyPath } = this.props;
-    value = value || _.get(data, fieldKeyPath);
+    const { fieldKeyPath } = this.props;
+    value = value || this.getValue(fieldKeyPath);
     return !this.getValidationError(value, fieldValidations);
   }
 
@@ -53,6 +53,30 @@ export class BaseField extends Component {
 
   getFieldId () {
     return this.props.fieldKeyPath;
+  }
+  
+  getValue (fieldKeyPath, defaultValue) {
+    const { Form } = this.context;
+    return _.get(Form.state.FormData, fieldKeyPath, defaultValue);
+  }
+
+  setValue (fieldKeyPath, value) {
+    const { Form } = this.context;
+    return _.set(Form.state.FormData, fieldKeyPath, value);
+  }
+
+  componentDidMount () {
+    this.registerField();
+  }
+
+  componentDidUpdate () {
+    this.registerField();
+  }
+
+  registerField () {
+    const { fieldKeyPath } = this.props;
+    const { Form } = this.context;
+    Form.registerField(fieldKeyPath, this);
   }
 
   render () {

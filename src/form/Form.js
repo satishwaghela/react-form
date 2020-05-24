@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { cloneFields, validateFields, areFieldsValid } from './FormUtils';
+import { validateFields, areFieldsValid } from './FormUtils';
 
 export default class Form extends Component {
   constructor (props) {
@@ -40,9 +40,13 @@ export default class Form extends Component {
   render () {
     return (
       <div className={this.props.className} style={this.props.style}>
-        {cloneFields(this.props.children, this.state.FormData)}
+        {this.props.children}
       </div>
     );
+  }
+
+  registerField (fieldKeyPath, fildComponent) {
+    _.set(this, `fields.${fieldKeyPath}`, fildComponent);
   }
 
   onFieldValueChange () {
@@ -53,11 +57,11 @@ export default class Form extends Component {
   }
 
   validate () {
-    validateFields(this.refs);
+    validateFields(this.fields);
   }
 
   isValid () {
-    return areFieldsValid(this.refs);
+    return areFieldsValid(this.fields);
   }
 
   isReadOnly () {
