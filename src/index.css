@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.disable {
+  opacity: 0.45;
+  cursor: help !important;
+}
