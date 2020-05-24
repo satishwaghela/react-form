@@ -6,8 +6,9 @@ import { findMultiValueOptions } from '../FormUtils';
 
 export class CreatableMultiSelect extends MultiSelect {
   handleChange = (selections) => {
+    const { data, fieldKeyPath } = this.props;
     const value = _.map(selections, (selection) => selection.value);
-    this.props.data[this.props.value] = value;
+    _.set(data, fieldKeyPath, value);
     super.handleChange(value);
   }
 
@@ -21,8 +22,8 @@ export class CreatableMultiSelect extends MultiSelect {
   }
 
   getValue = () => {
-    const { data, attrs } = this.props;
-    const val = data[this.props.value];
+    const { data, attrs, fieldKeyPath } = this.props;
+    const val = data[fieldKeyPath];
     this.addNewOption(_.map(val, v => ({ label: v, value: v })));
     return findMultiValueOptions(val, attrs.options, attrs.defaultValue);
   }

@@ -1,27 +1,29 @@
 import React from 'react';
+import _ from 'lodash';
 import { BaseField } from './BaseField';
 
 export class CheckBoxGroup extends BaseField {
   handleChange = (e, option) => {
-    const { value } = this.props;
-    const selected = this.props.data[value] || [];
+    const { data, fieldKeyPath } = this.props;
+    const selected = _.get(data, fieldKeyPath, []);
     const index = selected.indexOf(option);
     if (index >= 0) {
       selected.splice(index, 1);
     } else {
-      selected.push(option);
+      selected.push(option.value);
     }
-    this.props.data[value] = selected;
+    _.set(data, fieldKeyPath, selected);
     super.handleChange(selected);
   }
 
   validate () {
-    return super.validate(this.props.data[this.props.value]);
+    const { data, fieldKeyPath } = this.props;
+    return super.validate(_.get(data, fieldKeyPath));
   }
 
   getField = () => {
-    const { options, value } = this.props;
-    const selected = this.props.data[value] || [];
+    const { options, data, fieldKeyPath } = this.props;
+    const selected = _.get(data, fieldKeyPath, []);
     return (
       <fieldset className='fieldset-default'>
         <legend>{this.props.label}</legend>
@@ -31,7 +33,7 @@ export class CheckBoxGroup extends BaseField {
             <label className='checkbox-container display-block text-left'>
               <input
                 type='checkbox'
-                checked={selected.indexOf(opt) >= 0}
+                checked={!!_.find(selected, (s) => s === opt.value)}
                 onChange={e => this.handleChange(e, opt)}
               />
               {label}

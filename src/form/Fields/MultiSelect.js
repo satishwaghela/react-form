@@ -6,14 +6,15 @@ import { findMultiValueOptions } from '../FormUtils';
 
 export class MultiSelect extends BaseField {
   handleChange = (selections) => {
+    const { data, fieldKeyPath } = this.props;
     const value = _.map(selections, (selection) => selection.value);
-    this.props.data[this.props.value] = value;
+    _.set(data, fieldKeyPath, value);
     super.handleChange(value);
   }
 
   getValue = () => {
-    const { data, attrs } = this.props;
-    const val = data[this.props.value];
+    const { data, attrs, fieldKeyPath } = this.props;
+    const val = _.get(data, fieldKeyPath);;
     return findMultiValueOptions(val, attrs.options, attrs.defaultValue);
   }
 

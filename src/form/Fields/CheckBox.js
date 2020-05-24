@@ -1,25 +1,26 @@
 import React from 'react';
+import _ from 'lodash';
 import { BaseField } from './BaseField';
 import { getFieldPopover } from '../FormUtils';
 
 export class CheckBox extends BaseField {
   handleChange = (e) => {
+    const { data, fieldKeyPath, onChange } = this.props;
     const value = e.target.checked;
-    this.props.data[this.props.value] = value;
-    const onChange = this.props.onChange;
+    _.set(data, fieldKeyPath, value);
     if (onChange) {
       onChange();
     }
   }
 
   getField = () => {
-    const { value, checkBoxLabel, info } = this.props;
+    const { checkBoxLabel, info, data, fieldKeyPath } = this.props;
 
     const checkboxComp = (
       <label className='checkbox-container'>
         <input
           type='checkbox'
-          ref='input' value={this.props.data[value] || ''}
+          ref='input' value={_.get(data, fieldKeyPath, '')}
           onChange={e => this.handleChange(e)}
         />
         {checkBoxLabel}
@@ -29,7 +30,7 @@ export class CheckBox extends BaseField {
     return (
       <React.Fragment key='checkbox-comp'>
         {checkboxComp}
-        {info && getFieldPopover(info, value + 'checkbox')}
+        {info && getFieldPopover(info, fieldKeyPath + 'checkbox')}
       </React.Fragment>
     );
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { getFieldPopover } from '../FormUtils';
@@ -24,12 +25,14 @@ export class BaseField extends Component {
 
   setValidationError (errorMsg) {
     const { Form } = this.context;
-    Form.state.Errors[this.props.valuePath] = errorMsg;
+    const { fieldKeyPath } = this.props;
+    _.set(Form.state.Errors, fieldKeyPath, errorMsg);
     Form.setState(Form.state);
   }
 
   isValid (value, fieldValidations) {
-    value = value || this.props.data[this.props.value];
+    const { data, fieldKeyPath } = this.props;
+    value = value || _.get(data, fieldKeyPath);
     return !this.getValidationError(value, fieldValidations);
   }
 
@@ -39,16 +42,17 @@ export class BaseField extends Component {
   }
 
   getFieldInfo () {
-    const { fieldInfo, value } = this.props;
-    return getFieldPopover(fieldInfo, value, value);
+    const { fieldInfo, fieldKeyPath } = this.props;
+    return getFieldPopover(fieldInfo, fieldKeyPath, fieldKeyPath);
   }
 
   getErrorComp () {
-    return <p className='text-danger'>{this.context.Form.state.Errors[this.props.valuePath]}</p>;
+    const { fieldKeyPath } = this.props;
+    return <p className='text-danger'>{_.get(this.context.Form.state.Errors, fieldKeyPath)}</p>;
   }
 
   getFieldId () {
-    return this.props.value;
+    return this.props.fieldKeyPath;
   }
 
   render () {
