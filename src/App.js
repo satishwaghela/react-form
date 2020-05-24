@@ -13,6 +13,7 @@ const {
 
 export default class App extends Component {
   state = {
+    FormData: {},
     disableBtn: true
   }
 
@@ -28,16 +29,18 @@ export default class App extends Component {
   handleFormChange = () => {
     if (this.Form.isValid()) {
       this.setState({ disableBtn: false });
+    } else {
+      this.setState({ disableBtn: true });
     }
   }
 
   render () {
-    const { disableBtn } = this.state;
+    const { FormData, disableBtn } = this.state;
     return (
       <div className='App'>
         <div className='row'>
           <div className='col-md-6 offset-md-3'>
-            <Form FormData={{}} ref={ref => this.Form = ref} onChange={this.handleFormChange}>
+            <Form FormData={FormData} ref={ref => this.Form = ref} onChange={this.handleFormChange}>
               <String
                 label='E-mail'
                 fieldKeyPath='email'
@@ -120,6 +123,22 @@ export default class App extends Component {
                 fieldKeyPath='textArea'
                 validation={['required']}
               />
+              <div className='row'>
+                <div className='col-md-6'>
+                  <String
+                    label='Key'
+                    fieldKeyPath='xyz.0.key'
+                    validation={['required']}
+                  />
+                </div>
+                <div className='col-md-6'>
+                  <String
+                    label='Value'
+                    fieldKeyPath='xyz.0.value'
+                    validation={['required']}
+                  />
+                </div>
+              </div>
             </Form>
             <button
               type='button'

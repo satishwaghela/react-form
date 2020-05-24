@@ -46,7 +46,12 @@ export function areFieldsValid (fields) {
         isValid = isFieldValid;
       }
     } else if (_.isArray(component) || _.isObject(component)) {
-      isValid = areFieldsValid(component);
+      let isFieldValid = false;
+      isFieldValid = areFieldsValid(component);
+      
+      if (isValid) {
+        isValid = isFieldValid;
+      }
     }
   });
   return isValid;
