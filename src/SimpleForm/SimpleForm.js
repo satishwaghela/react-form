@@ -4,6 +4,7 @@ import PersonalInfoInputs from './PersonalInfoInputs';
 import OtherInputs from './OtherInputs';
 import FixedKeyValue from './FixedKeyValue';
 import FixedFourValuesExample from './FixedFourValuesExample';
+import AsyncSelectExample from './AsyncSelectExample';
 
 export default class SimpleForm extends Component {
   state = {
@@ -44,6 +45,11 @@ export default class SimpleForm extends Component {
                 </div>
                 <div className='col-md-6'>
                   <FixedFourValuesExample />
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <AsyncSelectExample />
                 </div>
               </div>
             </Form>

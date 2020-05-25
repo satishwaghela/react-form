@@ -114,3 +114,16 @@ export const findMultiValueOptions = (value, options, defaultValue) => {
   }
   return valueOptions;
 };
+
+export const toSelectObject = (value) => {
+  if(_.isString(value)) {
+    return {
+      label: value,
+      value,
+    };
+  } else if (_.isObject(value)) {
+    return value;
+  } else {
+    return null;
+  }
+}
