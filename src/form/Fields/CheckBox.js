@@ -31,7 +31,9 @@ export class CheckBox extends BaseField {
 
     return (
       <React.Fragment key='checkbox-comp'>
-        {checkboxComp}
+        <fieldset className='fieldset-default'>
+          {checkboxComp}
+        </fieldset>
         {info && getFieldPopover(info, fieldKeyPath + 'checkbox')}
       </React.Fragment>
     );

@@ -1,6 +1,7 @@
 export { BaseField } from './BaseField';
 export { CheckBox } from './CheckBox';
 export { CheckBoxGroup } from './CheckBoxGroup';
+export { RadioGroup } from './RadioGroup';
 export { CreatableMultiSelect } from './CreatableMultiSelect';
 export { CreatableSelect } from './CreatableSelect';
 export { MultiSelect } from './MultiSelect';

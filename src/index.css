@@ -16,3 +16,27 @@ code {
   opacity: 0.45;
   cursor: help !important;
 }
+
+.form-group > label {
+  margin: 0 0 2px;
+}
+
+label.checkbox-container {
+  margin-right: 10px;
+}
+
+label.checkbox-container > input {
+  margin-right: 5px;
+}
+
+.component-header {
+  margin: 20px 0;
+}
+
+div.form-data {
+  white-space: pre-wrap;
+}
+
+.popover-content-container {
+  padding: 10px;
+}
