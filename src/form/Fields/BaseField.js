@@ -101,10 +101,14 @@ export class BaseField extends Component {
   }
 
   handleChange (value) {
+    const { onChange } = this.props;
     const { Form } = this.context;
     Form.setState(Form.state, () => {
       this.validate(value);
       Form.onFieldValueChange();
+      if (onChange) {
+        onChange();
+      }
     });
   }
 }
