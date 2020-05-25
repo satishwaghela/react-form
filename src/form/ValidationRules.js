@@ -33,6 +33,18 @@ const ValidationRules = {
         return result;
       }
     }
+  },
+  number_min: (value, form, component) => {
+    const min = _.get(component, 'props.attrs.min');
+    if (!_.isUndefined(min) && value < min) {
+      return `Number should be greater than or equal to ${min}`
+    }
+  },
+  number_max: (value, form, component) => {
+    const max = _.get(component, 'props.attrs.max');
+    if (!_.isUndefined(max)  && value > max) {
+      return `Number should be less than or equal to ${max}`
+    }
   }
 };
 

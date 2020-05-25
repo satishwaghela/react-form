@@ -2,6 +2,7 @@ import React from 'react';
 import Form from '../form';
 const {
   String,
+  Password,
   RadioGroup,
   TextArea
 } = Form.Fields;
@@ -30,11 +31,11 @@ const PersonalInfoInputs = () => {
           />
         </div>
         <div className='col-md-6'>
-          <String
-            label='Last Name'
-            fieldKeyPath='profile.lastname'
+          <Password
+            label='Password'
+            fieldKeyPath='password'
             attrs={{
-              placeholder: 'Enter last name'
+              placeholder: 'Enter password'
             }}
           />
           <RadioGroup
