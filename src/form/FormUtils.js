@@ -4,26 +4,6 @@ import {
   OverlayTrigger,
   Popover
 } from 'react-bootstrap';
-import generateFields from './generateFields';
-
-export const cloneFields = (fields, data) => {
-  if (!_.isArray(fields)) {
-    fields = [fields];
-  }
-  return fields.map((child, i) => {
-    if (!child) {
-      return null;
-    }
-    return React.cloneElement(child, {
-      ref: child.props
-        ? (child.props._ref || i)
-        : i,
-      key: i,
-      data: data,
-      ...child.props
-    });
-  });
-};
 
 export function validateFields (fields) {
   _.each(fields, (component) => {
@@ -76,14 +56,6 @@ export function getFieldPopover (content, id = Math.random(), popoverClass) {
     return null;
   }
 }
-
-export const getDependentFields = (field, valuePath, data) => {
-  if (_.get(field, 'fields', []).length) {
-    const fields = generateFields(field.fields, data, valuePath.split('.'));
-    return cloneFields(fields, data);
-  }
-  return null;
-};
 
 export const findSingleValueOption = (value, options, defaultValue) => {
   let valueOption;
