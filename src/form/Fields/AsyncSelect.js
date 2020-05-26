@@ -29,6 +29,11 @@ export class AsyncSelect extends BaseField {
       />
     );
   }
+
+  validate () {
+    const { fieldKeyPath } = this.props;
+    return super.validate(this.getValue(fieldKeyPath));
+  }
 }
 
 AsyncSelect.defaultProps = {
