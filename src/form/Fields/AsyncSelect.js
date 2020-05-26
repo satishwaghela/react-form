@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import ReactSelectAsync from 'react-select/async';
 import { BaseField } from './BaseField';
 import { toSelectObject } from '../FormUtils';

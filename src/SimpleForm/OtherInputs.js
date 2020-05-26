@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from '../form';
 const {
+  Switch,
   CheckBox,
   CheckBoxGroup,
   Select,
@@ -14,11 +15,24 @@ const OtherInputs = () => {
     <>
       <div className='row'>
         <div className='col-md-6'>
-          <CheckBox
-            label='Status'
-            fieldKeyPath='active'
-            checkBoxLabel='Active'
-          />
+          <div className='row'>
+            <div className='col-md-6'>
+              <CheckBox
+                label='Status'
+                fieldKeyPath='active'
+                checkBoxLabel='Active'
+              />
+            </div>
+            <div className='col-md-6'>
+              <Switch
+                label='Status Switch'
+                fieldKeyPath='switch'
+                onText='Enabled'
+                offText='Disabled'
+                switchWidth='100px'
+              />
+            </div>
+          </div>
           <Select
             label='Report E-mail'
             fieldKeyPath='reportEmail'

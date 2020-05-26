@@ -40,3 +40,70 @@ div.form-data {
 .popover-content-container {
   padding: 10px;
 }
+
+/* Switch css start */
+
+.onoffswitchinput {
+  position: relative;
+  width: 90px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select: none;
+}
+.onoffswitchinput-checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.onoffswitchinput-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #999999;
+  border-radius: 20px;
+}
+.onoffswitchinput-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.onoffswitchinput-inner:before, .onoffswitchinput-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 0;
+  line-height: 25px;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.onoffswitchinput-inner:before {
+  content: attr(data-oncontent);
+  padding-left: 10px;
+  background-color: #34A7C1; color: #FFFFFF;
+}
+.onoffswitchinput-inner:after {
+  content: attr(data-offcontent);
+  padding-right: 10px;
+  background-color: #EEEEEE; color: #999999;
+  text-align: right;
+}
+.onoffswitchinput-switch {
+  display: block;
+  width: 15px;
+  margin: 6px;
+  background: #FFFFFF;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: 2px solid #999999;
+  border-radius: 20px;
+  transition: all 0.3s ease-in 0s;
+}
+.onoffswitchinput-checkbox:checked + .onoffswitchinput-label .onoffswitchinput-inner {
+  margin-left: 0;
+}
+
+/* Switch css end */

@@ -1,4 +1,5 @@
 export { BaseField } from './BaseField';
+export { Switch } from './Switch';
 export { CheckBox } from './CheckBox';
 export { CheckBoxGroup } from './CheckBoxGroup';
 export { RadioGroup } from './RadioGroup';
