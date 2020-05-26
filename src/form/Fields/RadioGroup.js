@@ -1,19 +1,12 @@
 import React from 'react';
-import _ from 'lodash';
 import { BaseField } from './BaseField';
 
-export class CheckBoxGroup extends BaseField {
+export class RadioGroup extends BaseField {
   handleChange = (e, option) => {
+    const { value } = option;
     const { fieldKeyPath } = this.props;
-    const selected = this.getValue(fieldKeyPath, []);
-    const index = selected.indexOf(option.value);
-    if (index >= 0) {
-      selected.splice(index, 1);
-    } else {
-      selected.push(option.value);
-    }
-    this.setValue(fieldKeyPath, selected);
-    super.handleChange(selected);
+    this.setValue(fieldKeyPath, value);
+    super.handleChange(value);
   }
 
   validate () {
@@ -22,7 +15,7 @@ export class CheckBoxGroup extends BaseField {
 
   getField = () => {
     const { options, fieldKeyPath } = this.props;
-    const selected = this.getValue(fieldKeyPath, []);
+    const value = this.getValue(fieldKeyPath, '');
     return (
       <fieldset className='fieldset-default'>
         {options.map((opt, i) => {
@@ -30,9 +23,10 @@ export class CheckBoxGroup extends BaseField {
           const checkboxComp = (
             <label className='checkbox-container display-block text-left' key={i + opt.name}>
               <input
-                type='checkbox'
-                checked={!!_.find(selected, (s) => s === opt.value)}
+                type='radio'
+                checked={opt.value === value}
                 onChange={e => this.handleChange(e, opt)}
+                name={fieldKeyPath}
               />
               {label}
             </label>

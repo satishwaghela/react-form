@@ -46,6 +46,11 @@ export class BaseField extends Component {
     return getFieldPopover(fieldInfo, fieldKeyPath, fieldKeyPath);
   }
 
+  getRequired () {
+    const { validation = [] } = this.props;
+    return validation.includes('required') ? '*' : '';
+  }
+
   getErrorComp () {
     const { fieldKeyPath } = this.props;
     return <p className='text-danger'>{_.get(this.context.Form.state.Errors, fieldKeyPath)}</p>;
@@ -54,7 +59,7 @@ export class BaseField extends Component {
   getFieldId () {
     return this.props.fieldKeyPath;
   }
-  
+
   getValue (fieldKeyPath, defaultValue) {
     const { Form } = this.context;
     return _.get(Form.state.FormData, fieldKeyPath, defaultValue);
@@ -83,7 +88,7 @@ export class BaseField extends Component {
     const { className, label, subComp } = this.props;
     return (
       <FormGroup id={this.getFieldId() + '-container'} className={className}>
-        {label && <label>{label} {this.getFieldInfo()}</label>}
+        {label && <label>{label} {this.getRequired()} {this.getFieldInfo()}</label>}
         {this.getField()}
         {!!subComp && subComp}
         {this.getErrorComp()}
@@ -96,10 +101,14 @@ export class BaseField extends Component {
   }
 
   handleChange (value) {
+    const { onChange } = this.props;
     const { Form } = this.context;
     Form.setState(Form.state, () => {
       this.validate(value);
       Form.onFieldValueChange();
+      if (onChange) {
+        onChange();
+      }
     });
   }
 }
