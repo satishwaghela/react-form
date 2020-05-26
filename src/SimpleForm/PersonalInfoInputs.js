@@ -4,7 +4,8 @@ const {
   String,
   Password,
   RadioGroup,
-  TextArea
+  TextArea,
+  MultiSelectTextInput
 } = Form.Fields;
 
 const PersonalInfoInputs = () => {
@@ -57,6 +58,10 @@ const PersonalInfoInputs = () => {
             label='Address'
             fieldKeyPath='textArea'
             validation={['required']}
+          />
+          <MultiSelectTextInput
+            label='Multi Select Text Input'
+            fieldKeyPath='multiSelectTextInput'
           />
         </div>
       </div>
