@@ -13,7 +13,7 @@ export class Number extends String {
             ? 'form-control invalidInput'
             : 'form-control'
         }
-        ref='input'
+        ref={ref => { this.input = ref; }}
         value={this.getValue(fieldKeyPath)}
         disabled={this.shouldDisable()}
         {...this.props.attrs}

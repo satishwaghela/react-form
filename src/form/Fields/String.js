@@ -5,7 +5,7 @@ import { BaseField } from './BaseField';
 export class String extends BaseField {
   handleChange = () => {
     const { fieldKeyPath } = this.props;
-    const value = this.refs.input.value;
+    const value = this.input.value;
     this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
@@ -24,7 +24,7 @@ export class String extends BaseField {
             ? 'form-control invalidInput'
             : 'form-control'
         }
-        ref='input'
+        ref={ref => { this.input = ref; }}
         value={this.getValue(fieldKeyPath, '')}
         disabled={this.shouldDisable()}
         {...this.props.attrs}

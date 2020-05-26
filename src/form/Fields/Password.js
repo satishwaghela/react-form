@@ -13,8 +13,8 @@ export class Password extends String {
             ? 'form-control invalidInput'
             : 'form-control'
         }
-        ref='input'
-        value={this.getValue(fieldKeyPath)}
+        ref={ref => { this.input = ref; }}
+        value={this.getValue(fieldKeyPath, '')}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         onChange={this.handleChange}

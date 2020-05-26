@@ -18,10 +18,10 @@ export class RadioGroup extends BaseField {
     const value = this.getValue(fieldKeyPath, '');
     return (
       <fieldset className='fieldset-default'>
-        {options.map((opt) => {
+        {options.map((opt, i) => {
           const label = opt.name;
           const checkboxComp = (
-            <label className='checkbox-container display-block text-left'>
+            <label className='checkbox-container display-block text-left' key={i + opt.name}>
               <input
                 type='radio'
                 checked={opt.value === value}
