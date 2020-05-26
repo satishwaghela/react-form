@@ -15,12 +15,12 @@ export class MultiSelectTextInput extends BaseField {
   handleChange = (selections) => {
     const { fieldKeyPath } = this.props;
     const value = _.map(selections, s => {
-      if(_.has(s, 'value')) {
+      if (_.has(s, 'value')) {
         return s.value;
       } else {
         return s;
       }
-    })
+    });
     this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
@@ -33,12 +33,10 @@ export class MultiSelectTextInput extends BaseField {
       case 'Enter':
       case 'Tab':
         this.setState({ inputValue: '' });
-        const selections = [...this.getValue(fieldKeyPath, []), inputValue]
-        this.handleChange(selections);
+        this.handleChange([...this.getValue(fieldKeyPath, []), inputValue]);
         event.preventDefault();
         break;
       default:
-        return;
     }
   };
 
@@ -57,7 +55,7 @@ export class MultiSelectTextInput extends BaseField {
     const selectValue = this.getValue(fieldKeyPath, []).map(value => ({
       label: value,
       value
-    }))
+    }));
 
     return (
       <CreatableSelect
@@ -71,7 +69,7 @@ export class MultiSelectTextInput extends BaseField {
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
         components={{
-          DropdownIndicator: null,
+          DropdownIndicator: null
         }}
         menuIsOpen={false}
       />

@@ -15,7 +15,7 @@ export class AsyncSelect extends BaseField {
     const { promiseOptions, fieldKeyPath } = this.props;
 
     const value = this.getValue(fieldKeyPath);
-    let selectValue = toSelectObject(value);
+    const selectValue = toSelectObject(value);
 
     return (
       <ReactSelectAsync

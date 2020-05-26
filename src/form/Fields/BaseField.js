@@ -117,11 +117,10 @@ BaseField.propTypes = {
   validation: PropTypes.array,
   className: PropTypes.string,
   label: PropTypes.string,
-  valuePath: PropTypes.string,
+  fieldKeyPath: PropTypes.string,
   fieldInfo: PropTypes.any,
-  value: PropTypes.any,
-  data: PropTypes.object,
-  subComp: PropTypes.any
+  subComp: PropTypes.any,
+  onChange: PropTypes.func
 };
 
 BaseField.contextTypes = {

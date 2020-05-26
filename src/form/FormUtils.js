@@ -88,14 +88,14 @@ export const findMultiValueOptions = (value, options, defaultValue) => {
 };
 
 export const toSelectObject = (value) => {
-  if(_.isString(value)) {
+  if (_.isString(value)) {
     return {
       label: value,
-      value,
+      value
     };
   } else if (_.isObject(value)) {
     return value;
   } else {
     return null;
   }
-}
+};
