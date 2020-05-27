@@ -21,9 +21,9 @@ export class CreatableMultiSelect extends MultiSelect {
     });
   }
 
-  getValue = () => {
+  getSelectValue = () => {
     const { attrs, fieldKeyPath } = this.props;
-    const val = super.getValue(fieldKeyPath);
+    const val = this.getValue(fieldKeyPath);
     this.addNewOption(_.map(val, v => ({ label: v, value: v })));
     return findMultiValueOptions(val, attrs.options, attrs.defaultValue);
   }
@@ -31,7 +31,7 @@ export class CreatableMultiSelect extends MultiSelect {
   getField = () => {
     return (
       <Creatable
-        value={this.getValue()}
+        value={this.getSelectValue()}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         isMulti

@@ -37,6 +37,8 @@ export class BaseField extends Component {
   }
 
   validate (value, fieldValidations) {
+    const { fieldKeyPath } = this.props;
+    value = value || this.getValue(fieldKeyPath);
     const error = this.getValidationError(value, fieldValidations);
     this.setValidationError(error);
   }

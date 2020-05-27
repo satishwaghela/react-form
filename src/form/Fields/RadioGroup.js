@@ -9,10 +9,6 @@ export class RadioGroup extends BaseField {
     super.handleChange(value);
   }
 
-  validate () {
-    return super.validate(this.getValue());
-  }
-
   getField = () => {
     const { options, fieldKeyPath } = this.props;
     const value = this.getValue(fieldKeyPath, '');

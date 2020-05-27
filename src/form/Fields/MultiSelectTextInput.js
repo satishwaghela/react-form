@@ -40,14 +40,6 @@ export class MultiSelectTextInput extends BaseField {
     }
   };
 
-  validate () {
-    return super.validate(this.getValue());
-  }
-
-  isValid () {
-    return super.isValid(this.getValue());
-  }
-
   getField = () => {
     const { inputValue } = this.state;
     const { fieldKeyPath } = this.props;

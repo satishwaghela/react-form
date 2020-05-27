@@ -10,11 +10,6 @@ export class String extends BaseField {
     super.handleChange(value);
   }
 
-  validate () {
-    const { fieldKeyPath } = this.props;
-    return super.validate(this.getValue(fieldKeyPath));
-  }
-
   getField = () => {
     const { fieldKeyPath } = this.props;
     return (
