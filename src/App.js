@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import SimpleForm from './SimpleForm';
+import DynamicForm from './DynamicForm';
 
 export default class App extends Component {
   render () {
     return (
-      <SimpleForm />
+      <DynamicForm />
     );
   }
 }

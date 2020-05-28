@@ -107,3 +107,11 @@ div.form-data {
 }
 
 /* Switch css end */
+
+.display-inline-block {
+  display: inline-block;
+}
+
+.m-r-sm {
+  margin-right: 10px;
+}
