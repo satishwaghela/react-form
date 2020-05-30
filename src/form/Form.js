@@ -17,6 +17,7 @@ export default class Form extends Component {
   }
 
   render () {
+    this.deregisterFields();
     return (
       <div className={this.props.className} style={this.props.style}>
         {this.props.children}
@@ -26,6 +27,10 @@ export default class Form extends Component {
 
   registerField (fieldKeyPath, fildComponent) {
     _.set(this, `fields.${fieldKeyPath}`, fildComponent);
+  }
+
+  deregisterFields () {
+    _.unset(this, `fields`);
   }
 
   onFieldValueChange () {
