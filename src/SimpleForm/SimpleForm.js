@@ -5,10 +5,13 @@ import OtherInputs from './OtherInputs';
 import FixedKeyValue from './FixedKeyValue';
 import FixedFourValuesExample from './FixedFourValuesExample';
 import AsyncSelectExample from './AsyncSelectExample';
+import KeyValueAddRemove from './KeyValueAddRemove';
 
 export default class SimpleForm extends Component {
   state = {
-    FormData: {},
+    FormData: {
+      myKeyValue: [undefined]
+    },
     disableBtn: true
   }
 
@@ -50,6 +53,15 @@ export default class SimpleForm extends Component {
               <div className='row'>
                 <div className='col-md-12'>
                   <AsyncSelectExample />
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-md-6'>
+                </div>
+                <div className='col-md-6'>
+                  <KeyValueAddRemove
+                    fieldKeyBasePath='myKeyValue'
+                  />
                 </div>
               </div>
             </Form>
