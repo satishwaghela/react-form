@@ -7,30 +7,9 @@ export default class Form extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      FormData: props.FormData,
-      Errors: props.Errors
+      FormData: props.FormData || {},
+      Errors: props.Errors || {}
     };
-  }
-
-  componentDidMount = () => {
-    this.setState({ Errors: {} });
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    if (this.props.FormData !== nextProps.FormData) {
-      this.updateFormData(nextProps.FormData);
-    }
-  }
-
-  updateFormData (newFormData) {
-    for (const key in this.state.Errors) {
-      delete this.state.Errors[key];
-    }
-
-    this.setState({
-      FormData: _.assignInWith(this.state.FormData, _.cloneDeep(newFormData)),
-      Errors: this.state.Errors
-    });
   }
 
   getChildContext () {
@@ -50,9 +29,10 @@ export default class Form extends Component {
   }
 
   onFieldValueChange () {
+    const { FormData, Errors } = this.state;
     const { onChange } = this.props;
     if (onChange) {
-      onChange();
+      onChange(FormData, Errors);
     }
   }
 
@@ -71,9 +51,7 @@ export default class Form extends Component {
 
 Form.defaultProps = {
   showRequired: true,
-  readOnly: false,
-  Errors: {},
-  FormData: {}
+  readOnly: false
 };
 
 Form.childContextTypes = {
