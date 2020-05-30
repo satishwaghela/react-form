@@ -16,10 +16,6 @@ export class CheckBoxGroup extends BaseField {
     super.handleChange(selected);
   }
 
-  validate () {
-    return super.validate(this.getValue());
-  }
-
   getField = () => {
     const { options, fieldKeyPath } = this.props;
     const selected = this.getValue(fieldKeyPath, []);

@@ -19,9 +19,9 @@ export class CreatableSelect extends Select {
     }
   }
 
-  getValue = () => {
+  getSelectValue = () => {
     const { attrs, fieldKeyPath } = this.props;
-    const val = super.getValue(fieldKeyPath);
+    const val = this.getValue(fieldKeyPath);
     this.addNewOption({ label: val, value: val });
     return findSingleValueOption(val, attrs.options, attrs.defaultValue);
   }
@@ -29,7 +29,7 @@ export class CreatableSelect extends Select {
   getField = () => {
     return (
       <Creatable
-        value={this.getValue()}
+        value={this.getSelectValue()}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         onChange={this.handleChange}

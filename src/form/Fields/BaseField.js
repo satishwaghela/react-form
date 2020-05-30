@@ -37,6 +37,8 @@ export class BaseField extends Component {
   }
 
   validate (value, fieldValidations) {
+    const { fieldKeyPath } = this.props;
+    value = value || this.getValue(fieldKeyPath);
     const error = this.getValidationError(value, fieldValidations);
     this.setValidationError(error);
   }
@@ -117,11 +119,10 @@ BaseField.propTypes = {
   validation: PropTypes.array,
   className: PropTypes.string,
   label: PropTypes.string,
-  valuePath: PropTypes.string,
+  fieldKeyPath: PropTypes.string,
   fieldInfo: PropTypes.any,
-  value: PropTypes.any,
-  data: PropTypes.object,
-  subComp: PropTypes.any
+  subComp: PropTypes.any,
+  onChange: PropTypes.func
 };
 
 BaseField.contextTypes = {

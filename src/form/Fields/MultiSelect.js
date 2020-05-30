@@ -12,24 +12,16 @@ export class MultiSelect extends BaseField {
     super.handleChange(value);
   }
 
-  getValue = () => {
+  getSelectValue = () => {
     const { attrs, fieldKeyPath } = this.props;
-    const val = super.getValue(fieldKeyPath);
+    const val = this.getValue(fieldKeyPath);
     return findMultiValueOptions(val, attrs.options, attrs.defaultValue);
-  }
-
-  validate () {
-    return super.validate(this.getValue());
-  }
-
-  isValid () {
-    return super.isValid(this.getValue());
   }
 
   getField = () => {
     return (
       <ReactSelect
-        value={this.getValue()}
+        value={this.getSelectValue()}
         disabled={this.shouldDisable()}
         {...this.props.attrs}
         isMulti
