@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
-import { getFieldPopover } from '../FormUtils';
+import { FieldLabel } from './FieldLabel';
 
 export class BaseField extends Component {
   type = 'FormField';
@@ -43,16 +43,6 @@ export class BaseField extends Component {
     this.setValidationError(error);
   }
 
-  getFieldInfo () {
-    const { fieldInfo, fieldKeyPath } = this.props;
-    return getFieldPopover(fieldInfo, fieldKeyPath, fieldKeyPath);
-  }
-
-  getRequired () {
-    const { validation = [] } = this.props;
-    return validation.includes('required') ? '*' : '';
-  }
-
   getErrorComp () {
     const { fieldKeyPath } = this.props;
     return <p className='text-danger'>{_.get(this.context.Form.state.Errors, fieldKeyPath)}</p>;
@@ -87,10 +77,16 @@ export class BaseField extends Component {
   }
 
   render () {
-    const { className, label, subComp } = this.props;
+    const { className, label, subComp, validation = [], fieldInfo } = this.props;
     return (
       <FormGroup id={this.getFieldId() + '-container'} className={className}>
-        {label && <label>{label} {this.getRequired()} {this.getFieldInfo()}</label>}
+        {label && (
+          <FieldLabel
+            text={label}
+            isRequired={validation.includes('required')}
+            info={fieldInfo}
+          />
+        )}
         {this.getField()}
         {!!subComp && subComp}
         {this.getErrorComp()}
