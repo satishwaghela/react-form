@@ -41,6 +41,6 @@ class  LoginForm  extends  Component {
 ```
 #
 
-> this module uses lodash's `get` and `set` methods. this means in fieldKeyPath you can pass `'profile.firstName'` to set `firstName` value  in `profile` object of formData.
+> this module uses lodash's `get` and `set` methods. this means in fieldKeyPath you can pass `'profile.firstName'` to set `firstName` value  in `profile` object of formData or likewise can give array index `'keyValue.0.key'` and `'keyValue.0.value'`, see examples to explore more.
 
 ## Clone and run server to see more examples. 
