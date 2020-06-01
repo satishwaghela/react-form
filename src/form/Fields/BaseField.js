@@ -16,7 +16,7 @@ export class BaseField extends Component {
     if (fieldValidations) {
       fieldValidations.forEach((v) => {
         if (errorMsg === '') {
-          errorMsg = validation[v](value, this.context.Form, this) || '';
+          errorMsg = validation[v](value, this.context.form, this) || '';
         }
       });
     }
@@ -24,10 +24,10 @@ export class BaseField extends Component {
   }
 
   setValidationError (errorMsg) {
-    const { Form } = this.context;
+    const { form } = this.context;
     const { fieldKeyPath } = this.props;
-    _.set(Form.state.Errors, fieldKeyPath, errorMsg);
-    Form.setState(Form.state);
+    _.set(form.state.errors, fieldKeyPath, errorMsg);
+    form.setState(form.state);
   }
 
   isValid (value, fieldValidations) {
@@ -45,7 +45,7 @@ export class BaseField extends Component {
 
   getErrorComp () {
     const { fieldKeyPath } = this.props;
-    return <p className='text-danger'>{_.get(this.context.Form.state.Errors, fieldKeyPath)}</p>;
+    return <p className='text-danger'>{_.get(this.context.form.state.errors, fieldKeyPath)}</p>;
   }
 
   getFieldId () {
@@ -53,13 +53,12 @@ export class BaseField extends Component {
   }
 
   getValue (fieldKeyPath, defaultValue) {
-    const { Form } = this.context;
-    return _.get(Form.state.FormData, fieldKeyPath, defaultValue);
+    const { form } = this.context;
+    return _.get(form.props.formData, fieldKeyPath, defaultValue);
   }
 
-  setValue (fieldKeyPath, value) {
-    const { Form } = this.context;
-    return _.set(Form.state.FormData, fieldKeyPath, value);
+  setValue (formData, fieldKeyPath, value) {
+    return _.set(formData, fieldKeyPath, value);
   }
 
   componentDidMount () {
@@ -72,8 +71,8 @@ export class BaseField extends Component {
 
   registerField () {
     const { fieldKeyPath } = this.props;
-    const { Form } = this.context;
-    Form.registerField(fieldKeyPath, this);
+    const { form } = this.context;
+    form.registerField(fieldKeyPath, this);
   }
 
   render () {
@@ -95,15 +94,17 @@ export class BaseField extends Component {
   }
 
   shouldDisable () {
-    return this.context.Form.isReadOnly();
+    return this.context.form.isReadOnly();
   }
 
   handleChange (value) {
-    const { onChange } = this.props;
-    const { Form } = this.context;
-    Form.setState(Form.state, () => {
+    const { onChange, fieldKeyPath } = this.props;
+    const { form } = this.context;
+    const { formData } = form.props;
+    const copyFormData = _.cloneDeep(formData);
+    this.setValue(copyFormData, fieldKeyPath, value);
+    form.onFieldValueChange(copyFormData, () => {
       this.validate(value);
-      Form.onFieldValueChange();
       if (onChange) {
         onChange();
       }
@@ -122,5 +123,5 @@ BaseField.propTypes = {
 };
 
 BaseField.contextTypes = {
-  Form: PropTypes.object
+  form: PropTypes.object
 };

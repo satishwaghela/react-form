@@ -13,7 +13,6 @@ export class MultiSelectTextInput extends BaseField {
   }
 
   handleChange = (selections) => {
-    const { fieldKeyPath } = this.props;
     const value = _.map(selections, s => {
       if (_.has(s, 'value')) {
         return s.value;
@@ -21,7 +20,6 @@ export class MultiSelectTextInput extends BaseField {
         return s;
       }
     });
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 

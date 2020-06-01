@@ -4,9 +4,7 @@ import { BaseField } from './BaseField';
 
 export class String extends BaseField {
   handleChange = () => {
-    const { fieldKeyPath } = this.props;
     const value = this.input.value;
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 
@@ -15,7 +13,7 @@ export class String extends BaseField {
     return (
       <input
         type='text' className={
-          _.get(this.context.Form.state.Errors, fieldKeyPath)
+          _.get(this.context.form.state.errors, fieldKeyPath)
             ? 'form-control invalidInput'
             : 'form-control'
         }

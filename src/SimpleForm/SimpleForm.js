@@ -9,37 +9,45 @@ import KeyValueAddRemove from './KeyValueAddRemove';
 
 export default class SimpleForm extends Component {
   state = {
-    FormData: {
+    formData: {
       myKeyValue: [undefined]
     },
     disableBtn: true
   }
 
+  componentDidMount () {
+    // this.loadDataForEdit();
+  }
+
   handleSubmit = () => {
+    const { formData } = this.state;
     if (this.Form.isValid()) {
-      console.log(this.Form.state.FormData);
+      console.log(formData);
     } else {
       this.Form.validate();
-      console.log(this.Form.state.Errors);
+      console.log(this.Form.state.errors);
     }
   }
 
-  handleFormChange = () => {
-    if (this.Form.isValid()) {
-      this.setState({ disableBtn: false });
-    } else {
-      this.setState({ disableBtn: true });
-    }
+  handleFormChange = (formData, callback) => {
+    this.setState({ formData }, () => {
+      callback();
+      if (this.Form.isValid()) {
+        this.setState({ disableBtn: false });
+      } else {
+        this.setState({ disableBtn: true });
+      }
+    });
   }
 
   render () {
-    const { FormData, disableBtn } = this.state;
+    const { formData, disableBtn } = this.state;
     return (
       <div className='App'>
         <div className='row'>
           <div className='col-md-10 offset-md-1'>
             <h3 className='component-header'>Form Example</h3>
-            <Form FormData={FormData} ref={ref => this.Form = ref} onChange={this.handleFormChange}>
+            <Form formData={formData} ref={ref => { this.Form = ref; }} onChange={this.handleFormChange}>
               <PersonalInfoInputs />
               <OtherInputs />
               <div className='row'>
@@ -56,8 +64,7 @@ export default class SimpleForm extends Component {
                 </div>
               </div>
               <div className='row'>
-                <div className='col-md-6'>
-                </div>
+                <div className='col-md-6' />
                 <div className='col-md-6'>
                   <KeyValueAddRemove
                     fieldKeyBasePath='myKeyValue'
@@ -72,15 +79,74 @@ export default class SimpleForm extends Component {
             >
               Submit
             </button>
-            </div>
+          </div>
         </div>
         <div className='row'>
           <div className='col-md-10 offset-md-1 form-data'>
             <h3 className='component-header'>Form Data</h3>
-            {JSON.stringify(FormData, null, '    ')}
+            {JSON.stringify(formData, null, '    ')}
           </div>
         </div>
       </div>
     );
+  }
+
+  loadDataForEdit () {
+    setTimeout(() => {
+      this.setState({
+        formData: {
+          myKeyValue: [
+            {
+              key: 'key1',
+              value: 'value1'
+            },
+            {
+              key: 'key2',
+              value: 'value2'
+            }
+          ],
+          profile: {
+            firstname: 'satish'
+          },
+          email: 'satishmwaghela@gmail.vom',
+          password: 'password',
+          textArea: 'Sample text',
+          group: [
+            'admin',
+            'editors'
+          ],
+          language: [
+            'en-us'
+          ],
+          sports: [
+            'football'
+          ],
+          keyValue: [
+            {
+              key: 'key1',
+              value: 'value1'
+            },
+            {
+              key: 'key2',
+              value: 'value2'
+            }
+          ],
+          fourValues: {
+            value1: 'value1',
+            value2: 'value2',
+            value3: 'value3',
+            value4: 'value4'
+          },
+          async: {
+            multi: [
+              'orange'
+            ],
+            select: 'orange'
+          },
+          sex: 'M',
+          switch: true
+        }
+      });
+    }, 3000);
   }
 }

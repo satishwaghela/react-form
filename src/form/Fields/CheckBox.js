@@ -4,9 +4,7 @@ import { getFieldPopover } from '../FormUtils';
 
 export class CheckBox extends BaseField {
   handleChange = (e) => {
-    const { fieldKeyPath } = this.props;
     const value = e.target.checked;
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 
