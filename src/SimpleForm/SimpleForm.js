@@ -15,6 +15,10 @@ export default class SimpleForm extends Component {
     disableBtn: true
   }
 
+  componentDidMount () {
+    // this.loadDataForEdit();
+  }
+
   handleSubmit = () => {
     const { formData } = this.state;
     if (this.Form.isValid()) {
@@ -85,5 +89,60 @@ export default class SimpleForm extends Component {
         </div>
       </div>
     );
+  }
+
+  loadDataForEdit () {
+    setTimeout(() => {
+      this.setState({
+        formData: {
+          myKeyValue: [
+            {
+              key: 'a',
+              value: 'a'
+            }
+          ],
+          profile: {
+            firstname: 'satish'
+          },
+          email: 'satish@sed.vom',
+          password: 'sdfa',
+          textArea: 'sdf',
+          group: [
+            'admin',
+            'editors'
+          ],
+          language: [
+            'en-us'
+          ],
+          sports: [
+            'football'
+          ],
+          keyValue: [
+            {
+              key: 'a',
+              value: '1'
+            },
+            {
+              key: 'a',
+              value: '4'
+            }
+          ],
+          fourValues: {
+            value1: 'a',
+            value2: 'a',
+            value3: 'a',
+            value4: 'a'
+          },
+          async: {
+            multi: [
+              'orange'
+            ],
+            select: 'orange'
+          },
+          sex: 'M',
+          switch: true
+        }
+      });
+    }, 3000);
   }
 }
