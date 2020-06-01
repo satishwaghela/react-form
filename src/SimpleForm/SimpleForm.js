@@ -97,16 +97,20 @@ export default class SimpleForm extends Component {
         formData: {
           myKeyValue: [
             {
-              key: 'a',
-              value: 'a'
+              key: 'key1',
+              value: 'value1'
+            },
+            {
+              key: 'key2',
+              value: 'value2'
             }
           ],
           profile: {
             firstname: 'satish'
           },
-          email: 'satish@sed.vom',
-          password: 'sdfa',
-          textArea: 'sdf',
+          email: 'satishmwaghela@gmail.vom',
+          password: 'password',
+          textArea: 'Sample text',
           group: [
             'admin',
             'editors'
@@ -119,19 +123,19 @@ export default class SimpleForm extends Component {
           ],
           keyValue: [
             {
-              key: 'a',
-              value: '1'
+              key: 'key1',
+              value: 'value1'
             },
             {
-              key: 'a',
-              value: '4'
+              key: 'key2',
+              value: 'value2'
             }
           ],
           fourValues: {
-            value1: 'a',
-            value2: 'a',
-            value3: 'a',
-            value4: 'a'
+            value1: 'value1',
+            value2: 'value2',
+            value3: 'value3',
+            value4: 'value4'
           },
           async: {
             multi: [
