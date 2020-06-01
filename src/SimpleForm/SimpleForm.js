@@ -33,7 +33,7 @@ export default class SimpleForm extends Component {
       } else {
         this.setState({ disableBtn: true });
       }
-    })
+    });
   }
 
   render () {
