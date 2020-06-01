@@ -6,48 +6,56 @@ const { String } = Form.Fields;
 
 export default class KeyValueAddRemove extends Component {
   getForm () {
-    return _.get(this, 'context.Form');
+    return _.get(this, 'context.form');
   }
 
   getValueArr () {
     const { fieldKeyBasePath } = this.props;
-    return _.get(this, `context.Form.state.FormData.${fieldKeyBasePath}`, []);
+    return _.get(this, `context.form.props.formData.${fieldKeyBasePath}`, []);
   }
 
-  setValueArr (valueArr) {
+  setValueArr (formData, valueArr) {
     const { fieldKeyBasePath } = this.props;
-    return _.set(this, `context.Form.state.FormData.${fieldKeyBasePath}`, valueArr);
+    return _.set(formData, fieldKeyBasePath, valueArr);
   }
 
   getErrorArr () {
     const { fieldKeyBasePath } = this.props;
-    return _.get(this, `context.Form.state.Errors.${fieldKeyBasePath}`, []);
+    return _.get(this, `context.form.state.errors.${fieldKeyBasePath}`, []);
   }
 
   setErrorArr (errorArr) {
     const { fieldKeyBasePath } = this.props;
-    return _.set(this, `context.Form.state.Errors.${fieldKeyBasePath}`, errorArr);
+    return _.set(this, `context.form.state.errors.${fieldKeyBasePath}`, errorArr);
   }
 
-  handleAdd =  () => {
-    const valueArr = this.getValueArr();
+  handleAdd = () => {
+    const { fieldKeyBasePath } = this.props;
+    const form = this.getForm();
+    const { formData } = form.props;
+    const copyFormData = _.cloneDeep(formData);
+    const valueArr = _.get(copyFormData, fieldKeyBasePath, []);
     valueArr.push(undefined);
-    this.setValueArr(valueArr);
-    const Form = this.getForm();
-    Form.forceUpdate();
-    Form.onFieldValueChange();
+    this.setValueArr(copyFormData, valueArr);
+    form.onFieldValueChange(copyFormData, () => {
+      // form.forceUpdate();
+    });
   }
 
   handleRemove = (index) => {
-    const valueArr = this.getValueArr();
+    const { fieldKeyBasePath } = this.props;
+    const form = this.getForm();
+    const { formData } = form.props;
+    const copyFormData = _.cloneDeep(formData);
+    const valueArr = _.get(copyFormData, fieldKeyBasePath, []);
     const errorArr = this.getErrorArr();
     valueArr.splice(index, 1);
     errorArr.splice(index, 1);
-    this.setValueArr(valueArr);
+    this.setValueArr(copyFormData, valueArr);
     this.setErrorArr(errorArr);
-    const Form = this.getForm();
-    Form.forceUpdate();
-    Form.onFieldValueChange();
+    form.onFieldValueChange(copyFormData, () => {
+      // form.forceUpdate();
+    });
   }
 
   render () {
@@ -82,10 +90,14 @@ export default class KeyValueAddRemove extends Component {
         })}
         <button onClick={this.handleAdd}>Add</button>
       </>
-    )
+    );
   }
 }
 
 KeyValueAddRemove.contextTypes = {
-  Form: PropTypes.object
+  form: PropTypes.object
+};
+
+KeyValueAddRemove.propTypes = {
+  fieldKeyBasePath: PropTypes.string
 };

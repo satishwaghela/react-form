@@ -7,13 +7,12 @@ export default class Form extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      FormData: props.FormData || {},
-      Errors: props.Errors || {}
+      errors: props.errors || {}
     };
   }
 
   getChildContext () {
-    return { Form: this };
+    return { form: this };
   }
 
   render () {
@@ -30,14 +29,13 @@ export default class Form extends Component {
   }
 
   deregisterFields () {
-    _.unset(this, `fields`);
+    _.unset(this, 'fields');
   }
 
-  onFieldValueChange () {
-    const { FormData, Errors } = this.state;
+  onFieldValueChange (newFormData, callback) {
     const { onChange } = this.props;
     if (onChange) {
-      onChange(FormData, Errors);
+      onChange(newFormData, callback);
     }
   }
 
@@ -60,12 +58,12 @@ Form.defaultProps = {
 };
 
 Form.childContextTypes = {
-  Form: PropTypes.object
+  form: PropTypes.object
 };
 
 Form.propTypes = {
-  FormData: PropTypes.object,
-  Errors: PropTypes.object,
+  formData: PropTypes.object,
+  errors: PropTypes.object,
   children: PropTypes.any,
   className: PropTypes.string,
   style: PropTypes.object,

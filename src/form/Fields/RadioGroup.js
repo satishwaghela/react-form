@@ -4,8 +4,6 @@ import { BaseField } from './BaseField';
 export class RadioGroup extends BaseField {
   handleChange = (e, option) => {
     const { value } = option;
-    const { fieldKeyPath } = this.props;
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 

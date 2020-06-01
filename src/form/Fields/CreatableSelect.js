@@ -6,9 +6,7 @@ import { findSingleValueOption } from '../FormUtils';
 
 export class CreatableSelect extends Select {
   handleChange = (selection) => {
-    const { fieldKeyPath } = this.props;
     const value = selection.value;
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 

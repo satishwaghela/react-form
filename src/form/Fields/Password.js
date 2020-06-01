@@ -9,7 +9,7 @@ export class Password extends String {
       <input
         type='password'
         className={
-          _.get(this.context.Form.state.Errors, fieldKeyPath)
+          _.get(this.context.form.state.errors, fieldKeyPath)
             ? 'form-control invalidInput'
             : 'form-control'
         }

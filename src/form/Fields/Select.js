@@ -6,8 +6,6 @@ import { findSingleValueOption } from '../FormUtils';
 export class Select extends BaseField {
   handleChange = (selection) => {
     const value = selection.value;
-    const { fieldKeyPath } = this.props;
-    this.setValue(fieldKeyPath, value);
     super.handleChange(value);
   }
 
