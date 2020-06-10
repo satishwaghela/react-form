@@ -7,7 +7,7 @@ export default class Form extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      errors: props.errors || {}
+      errors: {}
     };
   }
 
@@ -63,7 +63,6 @@ Form.childContextTypes = {
 
 Form.propTypes = {
   formData: PropTypes.object,
-  errors: PropTypes.object,
   children: PropTypes.any,
   className: PropTypes.string,
   style: PropTypes.object,
