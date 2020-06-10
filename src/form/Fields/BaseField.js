@@ -76,7 +76,7 @@ export class BaseField extends Component {
   }
 
   render () {
-    const { className, label, subComp, validation = [], fieldInfo } = this.props;
+    const { className, label, validation = [], fieldInfo } = this.props;
     return (
       <FormGroup id={this.getFieldId() + '-container'} className={className}>
         {label && (
@@ -87,7 +87,6 @@ export class BaseField extends Component {
           />
         )}
         {this.getField()}
-        {!!subComp && subComp}
         {this.getErrorComp()}
       </FormGroup>
     );
@@ -118,7 +117,6 @@ BaseField.propTypes = {
   label: PropTypes.string,
   fieldKeyPath: PropTypes.string,
   fieldInfo: PropTypes.any,
-  subComp: PropTypes.any,
   onChange: PropTypes.func
 };
 
