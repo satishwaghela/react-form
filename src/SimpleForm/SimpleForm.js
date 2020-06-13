@@ -5,7 +5,8 @@ import OtherInputs from './OtherInputs';
 import FixedKeyValue from './FixedKeyValue';
 import FixedFourValuesExample from './FixedFourValuesExample';
 import AsyncSelectExample from './AsyncSelectExample';
-import KeyValueAddRemove from './KeyValueAddRemove';
+import { ArrayAddRemove } from '../form/Fields';
+import KeyValueComp from './KeyValueComp';
 
 export default class SimpleForm extends Component {
   state = {
@@ -66,8 +67,9 @@ export default class SimpleForm extends Component {
               <div className='row'>
                 <div className='col-md-6' />
                 <div className='col-md-6'>
-                  <KeyValueAddRemove
-                    fieldKeyBasePath='myKeyValue'
+                  <ArrayAddRemove
+                    fieldKeyPath='myKeyValue'
+                    Child={KeyValueComp}
                   />
                 </div>
               </div>

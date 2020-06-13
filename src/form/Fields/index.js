@@ -15,3 +15,4 @@ export { String } from './String';
 export { Number } from './Number';
 export { Password } from './Password';
 export { TextArea } from './TextArea';
+export { ArrayAddRemove } from './ArrayAddRemove';
