@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { childPath } from '../form/FormUtils';
 import Form from '../form';
 const { String } = Form.Fields;
 
@@ -21,12 +22,12 @@ export default class KeyValueAddRemove extends Component {
 
   getErrorArr () {
     const { fieldKeyBasePath } = this.props;
-    return _.get(this, `context.form.state.errors.${fieldKeyBasePath}`, []);
+    return _.get(this, `context.form.state.errors.${childPath(fieldKeyBasePath)}`, []);
   }
 
   setErrorArr (errorArr) {
     const { fieldKeyBasePath } = this.props;
-    return _.set(this, `context.form.state.errors.${fieldKeyBasePath}`, errorArr);
+    return _.set(this, `context.form.state.errors.${childPath(fieldKeyBasePath)}`, errorArr);
   }
 
   handleAdd = () => {

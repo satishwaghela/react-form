@@ -9,6 +9,14 @@ export function normalizeFieldKeyPath (fieldKeyPath = '') {
   return fieldKeyPath.split('.').join('_');
 }
 
+export function childPath (fieldKeyPath) {
+  return fieldKeyPath.split('.').join('.children.') + '.children';
+}
+
+export function errorPath (fieldKeyPath) {
+  return fieldKeyPath.split('.').join('.children.') + '.error';
+}
+
 export function validateFields (fields) {
   _.each(fields, (component) => {
     component.validate();

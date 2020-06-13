@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { FieldLabel } from './FieldLabel';
-import { normalizeFieldKeyPath } from '../FormUtils';
+import { errorPath } from '../FormUtils';
 
 export class BaseField extends Component {
   type = 'FormField';
@@ -27,7 +27,7 @@ export class BaseField extends Component {
   setValidationError (errorMsg) {
     const { form } = this.context;
     const { fieldKeyPath } = this.props;
-    _.set(form.state.errors, normalizeFieldKeyPath(fieldKeyPath), errorMsg);
+    _.set(form.state.errors, errorPath(fieldKeyPath), errorMsg);
     form.setState(form.state);
   }
 
@@ -46,7 +46,7 @@ export class BaseField extends Component {
 
   getErrorComp () {
     const { fieldKeyPath } = this.props;
-    return <p className='text-danger'>{_.get(this.context.form.state.errors, normalizeFieldKeyPath(fieldKeyPath))}</p>;
+    return <p className='text-danger'>{_.get(this.context.form.state.errors, errorPath(fieldKeyPath))}</p>;
   }
 
   getFieldId () {
