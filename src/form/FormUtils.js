@@ -5,33 +5,24 @@ import {
   Popover
 } from 'react-bootstrap';
 
+export function normalizeFieldKeyPath (fieldKeyPath = '') {
+  return fieldKeyPath.split('.').join('_');
+}
+
 export function validateFields (fields) {
   _.each(fields, (component) => {
-    if (component.type === 'FormField') {
-      component.validate();
-    } else if (_.isArray(component) || _.isObject(component)) {
-      validateFields(component);
-    }
+    component.validate();
   });
 }
 
 export function areFieldsValid (fields) {
   let isValid = true;
   _.each(fields, (component) => {
-    if (component.type === 'FormField') {
-      let isFieldValid = false;
-      isFieldValid = component.isValid();
+    let isFieldValid = false;
+    isFieldValid = component.isValid();
 
-      if (isValid) {
-        isValid = isFieldValid;
-      }
-    } else if (_.isArray(component) || _.isObject(component)) {
-      let isFieldValid = false;
-      isFieldValid = areFieldsValid(component);
-
-      if (isValid) {
-        isValid = isFieldValid;
-      }
+    if (isValid) {
+      isValid = isFieldValid;
     }
   });
   return isValid;

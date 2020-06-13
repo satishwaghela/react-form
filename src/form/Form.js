@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { validateFields, areFieldsValid } from './FormUtils';
+import { validateFields, areFieldsValid, normalizeFieldKeyPath } from './FormUtils';
 
 export default class Form extends Component {
   constructor (props) {
@@ -25,7 +25,7 @@ export default class Form extends Component {
   }
 
   registerField (fieldKeyPath, fildComponent) {
-    _.set(this, `fields.${fieldKeyPath}`, fildComponent);
+    _.set(this, `fields.${normalizeFieldKeyPath(fieldKeyPath)}`, fildComponent);
   }
 
   deregisterFields () {
