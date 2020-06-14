@@ -73,6 +73,7 @@ export class BaseField extends Component {
     if (!_.isEqual(nextValue, prevValue) || !_.isEqual(nextError, prevError) || !_.isEqual(nextProps, props) || !_.isEqual(nextState, state)) {
       return true;
     }
+    return false;
   }
 
   componentDidMount () {
