@@ -32,10 +32,10 @@ export default class Form extends Component {
     _.unset(this, 'fields');
   }
 
-  onFieldValueChange (newFormData, callback) {
+  onFieldValueChange (newFormData) {
     const { onChange } = this.props;
     if (onChange) {
-      onChange(newFormData, callback);
+      onChange(newFormData);
     }
   }
 

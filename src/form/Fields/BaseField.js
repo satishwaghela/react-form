@@ -11,8 +11,8 @@ export class BaseField extends Component {
 
   getField = () => {}
 
-  getValidationError (value, fieldValidations) {
-    fieldValidations = fieldValidations || this.props.validation;
+  getValidationError (value) {
+    const fieldValidations =  this.props.validation;
     let errorMsg = '';
     if (fieldValidations) {
       fieldValidations.forEach((v) => {
@@ -31,16 +31,21 @@ export class BaseField extends Component {
     form.setState(form.state);
   }
 
-  isValid (value, fieldValidations) {
+  isValid (value) {
     const { fieldKeyPath } = this.props;
     value = value || this.getValue(fieldKeyPath);
-    return !this.getValidationError(value, fieldValidations);
+    return !this.getValidationError(value);
   }
 
-  validate (value, fieldValidations) {
+  validate () {
     const { fieldKeyPath } = this.props;
-    value = value || this.getValue(fieldKeyPath);
-    const error = this.getValidationError(value, fieldValidations);
+    const value = this.getValue(fieldKeyPath);
+    const error = this.getValidationError(value);
+    this.setValidationError(error);
+  }
+
+  validateValue (value) {
+    const error = this.getValidationError(value);
     this.setValidationError(error);
   }
 
@@ -103,12 +108,11 @@ export class BaseField extends Component {
     const { formData } = form.props;
     const copyFormData = _.cloneDeep(formData);
     this.setValue(copyFormData, fieldKeyPath, value);
-    form.onFieldValueChange(copyFormData, () => {
-      this.validate(value);
-      if (onChange) {
-        onChange();
-      }
-    });
+    form.onFieldValueChange(copyFormData);
+    this.validateValue(value);
+    if (onChange) {
+      onChange();
+    }
   }
 }
 
