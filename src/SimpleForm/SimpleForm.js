@@ -7,13 +7,13 @@ import FixedFourValuesExample from './FixedFourValuesExample';
 import AsyncSelectExample from './AsyncSelectExample';
 import { ArrayAddRemove } from '../form/Fields';
 import KeyValueComp from './KeyValueComp';
+import SubmitBtn from './SubmitBtn';
 
 export default class SimpleForm extends Component {
   state = {
     formData: {
       myKeyValue: [undefined]
-    },
-    disableBtn: true
+    }
   }
 
   componentDidMount () {
@@ -22,27 +22,28 @@ export default class SimpleForm extends Component {
 
   handleSubmit = () => {
     const { formData } = this.state;
-    if (this.Form.isValid()) {
+    const { isValid, invalidFields } = this.Form.getValidity()
+    if (isValid) {
       console.log(formData);
     } else {
+      const [firsField] = invalidFields;
+      firsField.container.scrollIntoView();
       this.Form.validate();
-      console.log(this.Form.state.errors);
     }
   }
 
-  handleFormChange = (formData, callback) => {
+  handleFormChange = (formData) => {
     this.setState({ formData }, () => {
-      callback();
       if (this.Form.isValid()) {
-        this.setState({ disableBtn: false });
+        this.submitBtn.unsetDisabled();
       } else {
-        this.setState({ disableBtn: true });
+        this.submitBtn.setDisabled();
       }
     });
   }
 
   render () {
-    const { formData, disableBtn } = this.state;
+    const { formData } = this.state;
     return (
       <div className='App'>
         <div className='row'>
@@ -74,13 +75,11 @@ export default class SimpleForm extends Component {
                 </div>
               </div>
             </Form>
-            <button
-              type='button'
-              onClick={this.handleSubmit}
-              className={`btn btn-success ${disableBtn ? 'disable' : ''}`}
-            >
-              Submit
-            </button>
+            <SubmitBtn
+              ref={ref => { this.submitBtn = ref; }}
+              defaultDisable={true}
+              onSubmit={this.handleSubmit}
+            />
           </div>
         </div>
         <div className='row'>

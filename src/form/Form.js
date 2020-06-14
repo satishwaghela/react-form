@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { validateFields, areFieldsValid, normalizeFieldKeyPath } from './FormUtils';
+import { validateFields, areFieldsValid, getValidity, normalizeForObjectKey } from './FormUtils';
 
 export default class Form extends Component {
   constructor (props) {
@@ -25,17 +25,17 @@ export default class Form extends Component {
   }
 
   registerField (fieldKeyPath, fildComponent) {
-    _.set(this, `fields.${normalizeFieldKeyPath(fieldKeyPath)}`, fildComponent);
+    _.set(this, `fields.${normalizeForObjectKey(fieldKeyPath)}`, fildComponent);
   }
 
   deregisterFields () {
     _.unset(this, 'fields');
   }
 
-  onFieldValueChange (newFormData, callback) {
+  onFieldValueChange (newFormData) {
     const { onChange } = this.props;
     if (onChange) {
-      onChange(newFormData, callback);
+      onChange(newFormData);
     }
   }
 
@@ -45,6 +45,10 @@ export default class Form extends Component {
 
   isValid () {
     return areFieldsValid(this.fields);
+  }
+
+  getValidity () {
+    return getValidity(this.fields);
   }
 
   isReadOnly () {

@@ -4,15 +4,15 @@ import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { FieldLabel } from './FieldLabel';
-import { errorPath } from '../FormUtils';
+import { errorPath, normalizeForObjectKey } from '../FormUtils';
 
 export class BaseField extends Component {
   type = 'FormField';
 
   getField = () => {}
 
-  getValidationError (value, fieldValidations) {
-    fieldValidations = fieldValidations || this.props.validation;
+  getValidationError (value) {
+    const fieldValidations =  this.props.validation;
     let errorMsg = '';
     if (fieldValidations) {
       fieldValidations.forEach((v) => {
@@ -31,16 +31,21 @@ export class BaseField extends Component {
     form.setState(form.state);
   }
 
-  isValid (value, fieldValidations) {
+  isValid (value) {
     const { fieldKeyPath } = this.props;
     value = value || this.getValue(fieldKeyPath);
-    return !this.getValidationError(value, fieldValidations);
+    return !this.getValidationError(value);
   }
 
-  validate (value, fieldValidations) {
+  validate () {
     const { fieldKeyPath } = this.props;
-    value = value || this.getValue(fieldKeyPath);
-    const error = this.getValidationError(value, fieldValidations);
+    const value = this.getValue(fieldKeyPath);
+    const error = this.getValidationError(value);
+    this.setValidationError(error);
+  }
+
+  validateValue (value) {
+    const error = this.getValidationError(value);
     this.setValidationError(error);
   }
 
@@ -50,7 +55,7 @@ export class BaseField extends Component {
   }
 
   getFieldId () {
-    return this.props.fieldKeyPath;
+    return normalizeForObjectKey(this.props.fieldKeyPath);
   }
 
   getValue (fieldKeyPath, defaultValue) {
@@ -79,7 +84,7 @@ export class BaseField extends Component {
   render () {
     const { className, label, validation = [], fieldInfo } = this.props;
     return (
-      <FormGroup id={this.getFieldId() + '-container'} className={className}>
+      <FormGroup id={this.getFieldId() + '-container'} ref={ref => { this.container = ref; }} className={className}>
         {label && (
           <FieldLabel
             text={label}
@@ -103,12 +108,11 @@ export class BaseField extends Component {
     const { formData } = form.props;
     const copyFormData = _.cloneDeep(formData);
     this.setValue(copyFormData, fieldKeyPath, value);
-    form.onFieldValueChange(copyFormData, () => {
-      this.validate(value);
-      if (onChange) {
-        onChange();
-      }
-    });
+    form.onFieldValueChange(copyFormData);
+    this.validateValue(value);
+    if (onChange) {
+      onChange();
+    }
   }
 }
 
