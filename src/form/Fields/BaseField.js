@@ -62,6 +62,19 @@ export class BaseField extends Component {
     return _.set(formData, fieldKeyPath, value);
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const { props, state } = this;
+    const { fieldKeyPath } = props;
+    const prevValue = _.get(this.context.form._prevProps.formData, fieldKeyPath);
+    const nextValue = _.get(this.context.form._nextProps.formData, fieldKeyPath);
+    const prevError = _.get(this.context.form._prevState.errors, errorPath(fieldKeyPath));
+    const nextError = _.get(this.context.form._nextProps.errors, errorPath(fieldKeyPath));
+
+    if (!_.isEqual(nextValue, prevValue) || !_.isEqual(nextError, prevError) || !_.isEqual(nextProps, props) || !_.isEqual(nextState, state)) {
+      return true;
+    }
+  }
+
   componentDidMount () {
     this.registerField();
   }

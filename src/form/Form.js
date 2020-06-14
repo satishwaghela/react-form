@@ -15,6 +15,14 @@ export default class Form extends Component {
     return { form: this };
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    this._prevProps = this.props;
+    this._prevState = this.state;
+    this._nextProps = nextProps;
+    this._nextState = nextState;
+    return true;
+  }
+
   render () {
     this.deregisterFields();
     return (
