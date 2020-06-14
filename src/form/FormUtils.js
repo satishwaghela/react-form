@@ -5,7 +5,7 @@ import {
   Popover
 } from 'react-bootstrap';
 
-export function normalizeFieldKeyPath (fieldKeyPath = '') {
+export function normalizeForObjectKey (fieldKeyPath = '') {
   return fieldKeyPath.split('.').join('_');
 }
 

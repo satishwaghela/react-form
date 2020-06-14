@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { FieldLabel } from './FieldLabel';
-import { errorPath, normalizeFieldKeyPath } from '../FormUtils';
+import { errorPath, normalizeForObjectKey } from '../FormUtils';
 
 export class BaseField extends Component {
   type = 'FormField';
@@ -55,7 +55,7 @@ export class BaseField extends Component {
   }
 
   getFieldId () {
-    return normalizeFieldKeyPath(this.props.fieldKeyPath);
+    return normalizeForObjectKey(this.props.fieldKeyPath);
   }
 
   getValue (fieldKeyPath, defaultValue) {
