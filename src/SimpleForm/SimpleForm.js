@@ -22,11 +22,13 @@ export default class SimpleForm extends Component {
 
   handleSubmit = () => {
     const { formData } = this.state;
-    if (this.Form.isValid()) {
+    const { isValid, invalidFields } = this.Form.getValidity()
+    if (isValid) {
       console.log(formData);
     } else {
+      const [firsField] = invalidFields;
+      firsField.container.scrollIntoView();
       this.Form.validate();
-      console.log(this.Form.state.errors);
     }
   }
 

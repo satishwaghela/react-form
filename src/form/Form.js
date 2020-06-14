@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { validateFields, areFieldsValid, normalizeFieldKeyPath } from './FormUtils';
+import { validateFields, areFieldsValid, getValidity, normalizeFieldKeyPath } from './FormUtils';
 
 export default class Form extends Component {
   constructor (props) {
@@ -45,6 +45,10 @@ export default class Form extends Component {
 
   isValid () {
     return areFieldsValid(this.fields);
+  }
+
+  getValidity () {
+    return getValidity(this.fields);
   }
 
   isReadOnly () {

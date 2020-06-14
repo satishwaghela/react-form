@@ -36,6 +36,23 @@ export function areFieldsValid (fields) {
   return isValid;
 }
 
+export function getValidity (fields) {
+  let isValid = true;
+  const invalidFields = [];
+  _.each(fields, (component) => {
+    let isFieldValid = false;
+    isFieldValid = component.isValid();
+
+    if (isValid) {
+      isValid = isFieldValid;
+    } 
+    if (!isFieldValid) {
+      invalidFields.push(component);
+    }
+  });
+  return { isValid, invalidFields };
+}
+
 export function getFieldPopover (content, id = Math.random(), popoverClass) {
   if (content) {
     const infoPopover = (

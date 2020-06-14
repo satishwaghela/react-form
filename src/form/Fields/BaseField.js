@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { FieldLabel } from './FieldLabel';
-import { errorPath } from '../FormUtils';
+import { errorPath, normalizeFieldKeyPath } from '../FormUtils';
 
 export class BaseField extends Component {
   type = 'FormField';
@@ -55,7 +55,7 @@ export class BaseField extends Component {
   }
 
   getFieldId () {
-    return this.props.fieldKeyPath;
+    return normalizeFieldKeyPath(this.props.fieldKeyPath);
   }
 
   getValue (fieldKeyPath, defaultValue) {
@@ -84,7 +84,7 @@ export class BaseField extends Component {
   render () {
     const { className, label, validation = [], fieldInfo } = this.props;
     return (
-      <FormGroup id={this.getFieldId() + '-container'} className={className}>
+      <FormGroup id={this.getFieldId() + '-container'} ref={ref => { this.container = ref; }} className={className}>
         {label && (
           <FieldLabel
             text={label}
