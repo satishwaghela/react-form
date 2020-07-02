@@ -109,11 +109,11 @@ export class BaseField extends Component {
     const { formData } = form.props;
     const copyFormData = _.cloneDeep(formData);
     this.setValue(copyFormData, fieldKeyPath, value);
-    form.onFieldValueChange(copyFormData);
-    this.validateValue(value);
     if (onChange) {
       onChange(value, copyFormData);
     }
+    form.onFieldValueChange(copyFormData);
+    this.validateValue(value);
   }
 }
 
