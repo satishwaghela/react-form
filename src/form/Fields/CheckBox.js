@@ -4,12 +4,14 @@ import { getFieldPopover } from '../FormUtils';
 
 export class CheckBox extends BaseField {
   handleChange = (e) => {
-    const value = e.target.checked;
+    const { fieldKeyPath } = this.props;
+    const value = !this.getValue(fieldKeyPath);
     super.handleChange(value);
   }
 
   getField = () => {
     const { checkBoxLabel, info, fieldKeyPath } = this.props;
+    const value = this.getValue(fieldKeyPath, '');
 
     const checkboxComp = (
       <label className='checkbox-container'>
@@ -18,20 +20,19 @@ export class CheckBox extends BaseField {
           ref={ref => {
             this.input = ref;
           }}
-          value={this.getValue(fieldKeyPath, '')}
+          value={value}
           onChange={e => this.handleChange(e)}
+          checked={value}
         />
         {checkBoxLabel}
       </label>
     );
 
     return (
-      <React.Fragment key='checkbox-comp'>
-        <fieldset className='fieldset-default'>
-          {checkboxComp}
-        </fieldset>
+      <div key='checkbox-comp'>
+        {checkboxComp}
         {info && getFieldPopover(info, fieldKeyPath + 'checkbox')}
-      </React.Fragment>
+      </div>
     );
   }
 }

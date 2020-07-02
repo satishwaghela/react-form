@@ -7,13 +7,14 @@ export class Switch extends CheckBox {
   getField = () => {
     const {
       info, fieldKeyPath,
-      switchWidth, onText, offText
+      switchWidth, onText, offText, className
     } = this.props;
 
     const checked = this.getValue(fieldKeyPath, false);
 
     const switchComp = (
       <SwitchInput
+        className={className}
         switchWidth={switchWidth}
         onText={onText}
         offText={offText}
@@ -24,12 +25,10 @@ export class Switch extends CheckBox {
     );
 
     return (
-      <React.Fragment key='checkbox-comp'>
-        <fieldset className='fieldset-default'>
-          {switchComp}
-        </fieldset>
+      <div>
+        {switchComp}
         {info && getFieldPopover(info, fieldKeyPath + 'checkbox')}
-      </React.Fragment>
+      </div>
     );
   }
 }

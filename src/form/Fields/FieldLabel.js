@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getFieldPopover } from '../FormUtils';
 
-export function FieldLabel ({ text, isRequired = false, info }) {
+export function FieldLabel ({ text, isRequired = false, info, classNames = '' }) {
   return (
-    <label>
+    <label className={classNames}>
       {text} {isRequired ? '*' : '' } {getFieldPopover(info, text + Math.random(), text)}
     </label>
   );
@@ -13,5 +13,6 @@ export function FieldLabel ({ text, isRequired = false, info }) {
 FieldLabel.propTypes = {
   text: PropTypes.string,
   isRequired: PropTypes.bool,
-  info: PropTypes.any
+  info: PropTypes.any,
+  classNames: PropTypes.string
 };

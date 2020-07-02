@@ -27,8 +27,9 @@ export class BaseField extends Component {
   setValidationError (errorMsg) {
     const { form } = this.context;
     const { fieldKeyPath } = this.props;
-    _.set(form.state.errors, errorPath(fieldKeyPath), errorMsg);
-    form.setState(form.state);
+    const errors = _.get(form, 'state.errors', {});
+    _.set(errors, errorPath(fieldKeyPath), errorMsg);
+    form.setErrors(errors);
   }
 
   isValid (value) {
@@ -111,7 +112,7 @@ export class BaseField extends Component {
     form.onFieldValueChange(copyFormData);
     this.validateValue(value);
     if (onChange) {
-      onChange();
+      onChange(value, copyFormData);
     }
   }
 }
@@ -126,5 +127,7 @@ BaseField.propTypes = {
 };
 
 BaseField.contextTypes = {
-  form: PropTypes.object
+  form: PropTypes.object,
+  formData: PropTypes.object,
+  errors: PropTypes.object
 };

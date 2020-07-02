@@ -27,7 +27,7 @@ export default class SimpleForm extends Component {
       console.log(formData);
     } else {
       const [firsField] = invalidFields;
-      firsField.container.scrollIntoView();
+      firsField.container.scrollIntoView({ behavior: 'smooth', block: 'center' });
       this.Form.validate();
     }
   }

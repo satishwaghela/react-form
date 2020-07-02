@@ -12,7 +12,7 @@ export default class Form extends Component {
   }
 
   getChildContext () {
-    return { form: this };
+    return { form: this, formData: this.props.formData, errors: this.state.errors };
   }
 
   render () {
@@ -39,6 +39,10 @@ export default class Form extends Component {
     }
   }
 
+  setErrors = (errors) => {
+    this.setState({ errors });
+  }
+
   validate () {
     validateFields(this.fields);
   }
@@ -62,7 +66,9 @@ Form.defaultProps = {
 };
 
 Form.childContextTypes = {
-  form: PropTypes.object
+  form: PropTypes.object,
+  formData: PropTypes.object,
+  errors: PropTypes.object
 };
 
 Form.propTypes = {
