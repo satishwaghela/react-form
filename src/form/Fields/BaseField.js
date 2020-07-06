@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { FormGroup } from 'react-bootstrap';
 import validation from '../ValidationRules';
 import { FieldLabel } from './FieldLabel';
-import { errorPath, normalizeForObjectKey } from '../FormUtils';
+import { errorPath, normalizeForObjectKey, setFieldValidationErrors } from '../FormUtils';
 
 export class BaseField extends Component {
   type = 'FormField';
@@ -25,11 +25,10 @@ export class BaseField extends Component {
   }
 
   setValidationError (errorMsg) {
-    const { form } = this.context;
     const { fieldKeyPath } = this.props;
-    const errors = _.get(form, 'state.errors', {});
-    _.set(errors, errorPath(fieldKeyPath), errorMsg);
-    form.setErrors(errors);
+    this.getForm().updateErrors((draftErrors) => {
+      _.set(draftErrors, errorPath(fieldKeyPath), errorMsg);
+    })
   }
 
   isValid (value) {
@@ -52,7 +51,8 @@ export class BaseField extends Component {
 
   getErrorComp () {
     const { fieldKeyPath } = this.props;
-    return <p className='text-danger'>{_.get(this.context.form.state.errors, errorPath(fieldKeyPath))}</p>;
+    const errorMsg = _.get(this.context.errors, errorPath(fieldKeyPath));
+    return errorMsg && <p className='text-danger field-error'>{errorMsg}</p>;
   }
 
   getFieldId () {
@@ -60,8 +60,8 @@ export class BaseField extends Component {
   }
 
   getValue (fieldKeyPath, defaultValue) {
-    const { form } = this.context;
-    return _.get(form.props.formData, fieldKeyPath, defaultValue);
+    const { formData } = this.context;
+    return _.get(formData, fieldKeyPath, defaultValue);
   }
 
   setValue (formData, fieldKeyPath, value) {
@@ -76,10 +76,20 @@ export class BaseField extends Component {
     this.registerField();
   }
 
+  componentWillUnmount () {
+    this.deregisterField();
+  }
+
   registerField () {
     const { fieldKeyPath } = this.props;
     const { form } = this.context;
     form.registerField(fieldKeyPath, this);
+  }
+
+  deregisterField () {
+    const { fieldKeyPath } = this.props;
+    const { form } = this.context;
+    form.deregisterField(fieldKeyPath);
   }
 
   render () {
@@ -105,15 +115,18 @@ export class BaseField extends Component {
 
   handleChange (value) {
     const { onChange, fieldKeyPath } = this.props;
-    const { form } = this.context;
-    const { formData } = form.props;
-    const copyFormData = _.cloneDeep(formData);
-    this.setValue(copyFormData, fieldKeyPath, value);
-    if (onChange) {
-      onChange(value, copyFormData);
-    }
-    form.onFieldValueChange(copyFormData);
-    this.validateValue(value);
+    this.getForm().updateFormDataAndErrors((draftFormData, draftErrors) => {
+      this.setValue(draftFormData, fieldKeyPath, value);
+      const errorMsg = this.getValidationError(value);
+      setFieldValidationErrors(draftErrors, fieldKeyPath, errorMsg);
+      if (onChange) {
+        onChange(value, draftFormData, draftErrors);
+      }
+    });
+  }
+
+  getForm = () => {
+    return _.get(this, 'context.form');
   }
 }
 

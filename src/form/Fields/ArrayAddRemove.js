@@ -10,38 +10,30 @@ export class ArrayAddRemove extends BaseField {
 
   handleAdd = (e) => {
     const { fieldKeyPath } = this.props;
-    const value = [...this.getValue(fieldKeyPath, [])];
-    value.push(undefined);
-    this.handleChange(value);
+    this.getForm().updateFormDataAndErrors((draftFormData, draftErrors) => {
+      const value = _.get(draftFormData, fieldKeyPath, []);
+      value.push(undefined);
+      this.setValue(draftFormData, fieldKeyPath, value);
+    });
   }
 
   handleRemove = (e, i) => {
     const { fieldKeyPath } = this.props;
-    const value = [...this.getValue(fieldKeyPath, [])];
-    value.splice(i, 1);
+    this.getForm().updateFormDataAndErrors((draftFormData, draftErrors) => {
+      const value = _.get(draftFormData, fieldKeyPath, []);
+      value.splice(i, 1);
+      _.set(draftFormData, fieldKeyPath, value);
 
-    const errors = this.getErrorArr();
-    errors.splice(i, 1);
-    this.setErrorArr(errors);
-
-    this.handleChange(value);
-  }
-
-  getErrorArr () {
-    const { fieldKeyPath } = this.props;
-    return _.get(this, `context.form.state.errors.${childPath(fieldKeyPath)}`, []);
-  }
-
-  setErrorArr (errorArr) {
-    const { fieldKeyPath } = this.props;
-    return _.set(this, `context.form.state.errors.${childPath(fieldKeyPath)}`, errorArr);
+      const errors = _.get(draftErrors, childPath(fieldKeyPath), []);
+      errors.splice(i, 1);
+    });
   }
 
   getField = () => {
     const { fieldKeyPath, Child } = this.props;
     const valueArr = this.getValue(fieldKeyPath, []);
     return (
-      <>
+      <div>
         {_.map(valueArr, (value, i) => {
           const baseFieldKeyPath = `${fieldKeyPath}.${i}`
           return (
@@ -54,7 +46,7 @@ export class ArrayAddRemove extends BaseField {
           )
         })}
         <button onClick={this.handleAdd}>Add</button>
-      </>
+      </div>
     );
   }
 }

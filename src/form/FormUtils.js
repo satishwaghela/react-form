@@ -23,6 +23,19 @@ export function validateFields (fields) {
   });
 }
 
+export function setFieldsValidationErrors (fields, errors) {
+  _.each(fields, (field, keys) => {
+    const { fieldKeyPath } = field.props;
+    const value = field.getValue(fieldKeyPath);
+    const errorMsg = field.getValidationError(value);
+    _.set(errors, errorPath(fieldKeyPath), errorMsg);
+  });
+}
+
+export function setFieldValidationErrors (errors, fieldKeyPath, errorMsg) {
+  _.set(errors, errorPath(fieldKeyPath), errorMsg);
+}
+
 export function areFieldsValid (fields) {
   let isValid = true;
   _.each(fields, (component) => {
@@ -45,7 +58,7 @@ export function getValidity (fields) {
 
     if (isValid) {
       isValid = isFieldValid;
-    } 
+    }
     if (!isFieldValid) {
       invalidFields.push(component);
     }

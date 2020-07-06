@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import produce from 'immer';
 import _ from 'lodash';
-import { validateFields, areFieldsValid, getValidity, normalizeForObjectKey } from './FormUtils';
+import { setFieldsValidationErrors, areFieldsValid, getValidity, normalizeForObjectKey } from './FormUtils';
 
 export default class Form extends Component {
   constructor (props) {
@@ -16,7 +17,6 @@ export default class Form extends Component {
   }
 
   render () {
-    this.deregisterFields();
     return (
       <div className={this.props.className} style={this.props.style}>
         {this.props.children}
@@ -28,8 +28,8 @@ export default class Form extends Component {
     _.set(this, `fields.${normalizeForObjectKey(fieldKeyPath)}`, fildComponent);
   }
 
-  deregisterFields () {
-    _.unset(this, 'fields');
+  deregisterField (fieldKeyPath) {
+    this.fields = _.omit(this.fields, [normalizeForObjectKey(fieldKeyPath)]);
   }
 
   onFieldValueChange (newFormData) {
@@ -39,12 +39,10 @@ export default class Form extends Component {
     }
   }
 
-  setErrors = (errors) => {
-    this.setState({ errors });
-  }
-
-  validate () {
-    validateFields(this.fields);
+  validate (setStateCallback) {
+    this.updateErrors((draftErrors) => {
+      setFieldsValidationErrors(this.fields, draftErrors);
+    }, setStateCallback)
   }
 
   isValid () {
@@ -57,6 +55,26 @@ export default class Form extends Component {
 
   isReadOnly () {
     return this.props.readOnly;
+  }
+
+  updateFormDataAndErrors = (callback) => {
+    let formData, errors;
+    formData = produce(this.props.formData, draftFormData => {
+      errors = produce(this.state.errors, draftErrors => {
+        callback(draftFormData, draftErrors);
+      });
+    });
+    this.setState({ errors }, () => {
+      this.onFieldValueChange(formData);
+    });
+  }
+
+  updateErrors = (callback, setStateCallback) => {
+    let errors;
+    errors = produce(this.state.errors, draftErrors => {
+      callback(draftErrors);
+    });
+    this.setState({ errors }, setStateCallback);
   }
 }
 
