@@ -1,19 +1,30 @@
 import React from 'react';
 import _ from 'lodash';
 import { BaseField } from './BaseField';
-import { childPath } from '../FormUtils';
+import { childPath, setFieldValidationErrors } from '../FormUtils';
 
 export class ArrayAddRemove extends BaseField {
   handleChange = (value) => {
     super.handleChange(value);
   }
 
-  handleAdd = (e) => {
+  handleReplace = (replaceValue, index) => {
     const { fieldKeyPath } = this.props;
     this.getForm().updateFormDataAndErrors((draftFormData, draftErrors) => {
       const value = _.get(draftFormData, fieldKeyPath, []);
-      value.push(undefined);
+      value.splice(index, 1, replaceValue);
       this.setValue(draftFormData, fieldKeyPath, value);
+    });
+  }
+
+  handleAdd = (addValue) => {
+    const { fieldKeyPath } = this.props;
+    this.getForm().updateFormDataAndErrors((draftFormData, draftErrors) => {
+      const value = _.get(draftFormData, fieldKeyPath, []);
+      value.push(addValue);
+      this.setValue(draftFormData, fieldKeyPath, value);
+      const errorMsg = this.getValidationError(value);
+      setFieldValidationErrors(draftErrors, fieldKeyPath, errorMsg);
     });
   }
 
@@ -26,6 +37,9 @@ export class ArrayAddRemove extends BaseField {
 
       const errors = _.get(draftErrors, childPath(fieldKeyPath), []);
       errors.splice(i, 1);
+
+      const errorMsg = this.getValidationError(value);
+      setFieldValidationErrors(draftErrors, fieldKeyPath, errorMsg);
     });
   }
 
@@ -35,17 +49,16 @@ export class ArrayAddRemove extends BaseField {
     return (
       <div>
         {_.map(valueArr, (value, i) => {
-          const baseFieldKeyPath = `${fieldKeyPath}.${i}`
+          const childFieldKeyPath = `${fieldKeyPath}.${i}`
           return (
             <Child
-              key={baseFieldKeyPath}
-              baseFieldKeyPath={baseFieldKeyPath}
+              key={childFieldKeyPath}
+              fieldKeyPath={childFieldKeyPath}
               value={value}
               onRemove={e => this.handleRemove(e, i)}
             />
           )
         })}
-        <button onClick={this.handleAdd}>Add</button>
       </div>
     );
   }
