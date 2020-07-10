@@ -9,12 +9,12 @@ export default function useForm ({
     formData, metaData
   });
   const fields = useRef({});
-  const hasValueChanged = useRef(false);
+  const hasFormChanged = useRef(false);
 
   useEffect(() => {
-    if (hasValueChanged.current && onFormChange) {
+    if (hasFormChanged.current && onFormChange) {
       onFormChange();
-      hasValueChanged.current = false;
+      hasFormChanged.current = false;
     }
   });
 
@@ -43,7 +43,7 @@ export default function useForm ({
   const setFieldValue = (formState, fieldKeyPath, value) => {
     _.set(formState.formData, fieldKeyPath, value);
     setFieldTouched(formState, fieldKeyPath);
-    hasValueChanged.current = true;
+    hasFormChanged.current = true;
   };
 
   const getFieldTouched = (formState, fieldKeyPath) => {
@@ -78,8 +78,8 @@ export default function useForm ({
       const newState = { ...state };
       setFieldError(newState, fieldKeyPath, error);
       setFieldValidating(newState, fieldKeyPath, false);
-      hasValueChanged.current = true;
-      setState(newState);
+      hasFormChanged.current = true;
+      setFormState(newState);
     });
   };
 
@@ -99,11 +99,11 @@ export default function useForm ({
           const newState = { ...state };
           setFieldError(newState, fieldKeyPath, error);
           setFieldValidating(newState, fieldKeyPath, false);
-          setState(newState);
+          setFormState(newState);
         });
       }
     });
-    setState(formState);
+    setFormState(formState);
   };
 
   const getFormValidity = () => {

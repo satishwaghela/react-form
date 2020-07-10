@@ -10,9 +10,9 @@ export default function Example () {
     onFormChange: () => {
       const { valid } = form.getFormValidity();
       if (valid) {
-        submitBtnRef.current.removeAttribute('disabled');
+        submitBtnRef.current.classList.remove('disable');
       } else {
-        submitBtnRef.current.setAttribute('disabled', true);
+        submitBtnRef.current.classList.add('disable');
       }
     }
   });
@@ -23,9 +23,9 @@ export default function Example () {
     }
   };
 
-  const buttonProp = {};
+  const buttonProps = {};
   if (!submitBtnRef.current) {
-    buttonProp.disabled = true;
+    buttonProps.className = 'disable';
   }
 
   return (
@@ -44,7 +44,7 @@ export default function Example () {
           return (
             <div>
               {metaData.error && <p className='text-danger field-error'>{metaData.error}</p>}
-              {metaData.validating ? 'Validating...' : null}
+              {metaData.validating ? <p>Validating...</p> : null}
             </div>
           );
         }}
@@ -59,7 +59,6 @@ export default function Example () {
         }}
       />
       <button
-        {...buttonProp}
         ref={submitBtnRef}
         onClick={() => {
           const validity = form.getFormValidity();
@@ -70,6 +69,7 @@ export default function Example () {
             form.validateForm();
           }
         }}
+        {...buttonProps}
       >
         Submit
       </button>
