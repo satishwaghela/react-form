@@ -18,21 +18,38 @@ export default function Example () {
       <String
         form={form}
         fieldKeyPath='profile.firstname'
-        validations={[requiredValidation]}
         ref={form.registerField('profile.firstname')}
+        validation={(value, formState, fieldProps, callback) => {
+          setTimeout(() => {
+            const errorMsg = requiredValidation(value);
+            callback(errorMsg);
+          }, 5000);
+        }}
+        fieldStateCustom={(metaData) => {
+          return (
+            <div>
+              {metaData.error && <p className='text-danger field-error'>{metaData.error}</p>}
+              {metaData.validating ? 'Validating...' : null}
+            </div>
+          );
+        }}
       />
       <String
         form={form}
         fieldKeyPath='profile.lastname'
-        validations={[requiredValidation]}
         ref={form.registerField('profile.lastname')}
+        validation={(value, formState, fieldProps, callback) => {
+          const errorMsg = requiredValidation(value);
+          callback(errorMsg);
+        }}
       />
       <button
         onClick={() => {
-          const { valid } = form.getFormValidity();
-          if (valid) {
+          const validity = form.getFormValidity();
+          if (validity.valid) {
             console.log(form.formState.formData);
           } else {
+            console.log(validity);
             form.validateForm();
           }
         }}

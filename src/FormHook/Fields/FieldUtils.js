@@ -1,10 +1,9 @@
 
 export function runValueChangeFlow (value, props) {
-  const { form, fieldKeyPath, validations, onValueChange } = props;
+  const { form, fieldKeyPath, validation, onValueChange } = props;
   const formState = { ...form.formState };
   form.setFieldValue(formState, fieldKeyPath, value);
-  const validationError = form.runValidations(validations, value, formState, props);
-  form.setFieldError(formState, fieldKeyPath, validationError);
+  form.runValidation(validation, value, formState, props);
   if (onValueChange) {
     onValueChange(value, formState);
   }
