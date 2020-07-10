@@ -1,13 +1,22 @@
-import { useState, useRef, createRef } from 'react';
+import { useState, useEffect, useRef, createRef } from 'react';
 import _ from 'lodash';
 
 export default function useForm ({
-  formData = {}, metaData = {}
+  formData = {}, metaData = {},
+  onFormChange
 }) {
   const [state, setState] = useState({
     formData, metaData
   });
   const fields = useRef({});
+  const hasValueChanged = useRef(false);
+
+  useEffect(() => {
+    if (hasValueChanged.current && onFormChange) {
+      onFormChange();
+      hasValueChanged.current = false;
+    }
+  });
 
   const registerField = (fieldKeyPath) => {
     const ref = createRef();
@@ -34,6 +43,7 @@ export default function useForm ({
   const setFieldValue = (formState, fieldKeyPath, value) => {
     _.set(formState.formData, fieldKeyPath, value);
     setFieldTouched(formState, fieldKeyPath);
+    hasValueChanged.current = true;
   };
 
   const getFieldTouched = (formState, fieldKeyPath) => {
@@ -68,6 +78,7 @@ export default function useForm ({
       const newState = { ...state };
       setFieldError(newState, fieldKeyPath, error);
       setFieldValidating(newState, fieldKeyPath, false);
+      hasValueChanged.current = true;
       setState(newState);
     });
   };
@@ -75,8 +86,13 @@ export default function useForm ({
   const validateForm = () => {
     const formState = { ...state };
     _.each(fields.current, (field, fieldKeyPath) => {
+      if (!field.current || !field.current.getValidationError) {
+        return;
+      }
       const isFieldTouched = getFieldTouched(state, fieldKeyPath);
-      if (!isFieldTouched) {
+      const fieldError = getFieldError(state, fieldKeyPath);
+      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
+      if (!isFieldTouched && !fieldError && !isFieldValidating) {
         setFieldError(formState, fieldKeyPath);
         setFieldValidating(formState, fieldKeyPath, true);
         field.current.getValidationError((error) => {
@@ -98,6 +114,9 @@ export default function useForm ({
       validatingFields: []
     };
     _.each(fields.current, (field, fieldKeyPath) => {
+      if (!field.current || !field.current.getValidationError) {
+        return;
+      }
       const isFieldTouched = getFieldTouched(state, fieldKeyPath);
       const fieldError = getFieldError(state, fieldKeyPath);
       const isFieldValidating = getFieldValidating(state, fieldKeyPath);

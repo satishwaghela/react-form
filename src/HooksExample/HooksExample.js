@@ -3,8 +3,18 @@ import useForm from '../FormHook';
 import String from '../FormHook/Fields/String';
 
 export default function Example () {
+  const submitBtnRef = React.createRef();
+
   const form = useForm({
-    formData: {}
+    formData: {},
+    onFormChange: () => {
+      const { valid } = form.getFormValidity();
+      if (valid) {
+        submitBtnRef.current.removeAttribute('disabled');
+      } else {
+        submitBtnRef.current.setAttribute('disabled', true);
+      }
+    }
   });
 
   const requiredValidation = (value) => {
@@ -12,6 +22,11 @@ export default function Example () {
       return 'Required!';
     }
   };
+
+  const buttonProp = {};
+  if (!submitBtnRef.current) {
+    buttonProp.disabled = true;
+  }
 
   return (
     <>
@@ -44,6 +59,8 @@ export default function Example () {
         }}
       />
       <button
+        {...buttonProp}
+        ref={submitBtnRef}
         onClick={() => {
           const validity = form.getFormValidity();
           if (validity.valid) {
