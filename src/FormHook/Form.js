@@ -131,7 +131,6 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const isFieldTouched = getFieldTouched(state, fieldKeyPath);
       const fieldError = getFieldError(state, fieldKeyPath);
       const isFieldValidating = getFieldValidating(state, fieldKeyPath);
       const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
@@ -139,7 +138,7 @@ export default function useForm ({
         validity.invalidFields.push(fieldKeyPath);
       } else if (isFieldValidating) {
         validity.validatingFields.push(fieldKeyPath);
-      } else if (!isFieldTouched || !isFieldValidationDone) {
+      } else if (!isFieldValidationDone) {
         validity.validatingFields.push(fieldKeyPath);
         const value = getFieldValue(state, fieldKeyPath);
         field.validation(value, state, (error) => {
