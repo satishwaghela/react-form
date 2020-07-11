@@ -84,6 +84,9 @@ export default function useForm ({
 
   const getValidator = (formState, fieldKeyPath, value) => {
     const validation = fields.current[fieldKeyPath].validation;
+    if (!validation) {
+      return () => { console.error(`No validation defined for field ${fieldKeyPath}`) }
+    }
     return () => {
       runValidation(validation, value, formState, fieldKeyPath);
     }
