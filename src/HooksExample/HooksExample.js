@@ -1,5 +1,7 @@
 import React from 'react';
 import useForm from '../FormHook';
+import FFTextField from '../FormHook/Fields/FFTextField';
+import ObjectFieldExample from './ObjectFieldExample';
 
 export default function Example () {
   const submitBtnRef = React.createRef();
@@ -16,8 +18,6 @@ export default function Example () {
     }
   });
 
-  const { formState } = form;
-
   const requiredValidation = (value) => {
     if (!value) {
       return 'Required!';
@@ -31,47 +31,37 @@ export default function Example () {
 
   return (
     <>
-      <input
-        type='text'
-        value={form.getFieldValue(formState, 'profile.firstname', '')}
-        onChange={(e) => {
-          const value = e.target.value;
-          const newFormState = { ...formState };
-          form.setFieldValue(newFormState, 'profile.firstname', value);
-          form.setFieldError(newFormState, 'profile.firstname');
-          // const validator = form.getValidator(newFormState, 'profile.firstname', value);
-          // validator();
-          form.setFormState(newFormState);
-        }}
-        onBlur={(e) => {
-          const value = e.target.value;
-          const newFormState = { ...formState };
-          const validator = form.getValidator(newFormState, 'profile.firstname', value);
-          validator();
-          form.setFormState(newFormState);
-        }}
-        ref={form.registerField('profile.firstname', {
-          validation: (value, formState, callback) => {
+      <div>
+        <FFTextField
+          form={form}
+          fieldKeyPath='profile.firstname'
+          validation={(value, formState, callback) => {
             setTimeout(() => {
               const errorMsg = requiredValidation(value);
               callback(errorMsg);
             }, 5000);
-          }
-        })}
-      />
-      <p className='text-danger'>{form.getFieldMetaData(formState, 'profile.firstname').error}</p>
-      <p className='text-danger'>{form.getFieldMetaData(formState, 'profile.firstname').validating ? 'Validating...' : null}</p>
-      <input
-        type='text'
-        value={form.getFieldValue(formState, 'profile.lastname', '')}
-        onChange={(e) => {
-          const value = e.target.value;
-          const newFormState = { ...formState };
-          form.setFieldValue(newFormState, 'profile.lastname', value);
-          form.setFormState(newFormState);
-        }}
-        ref={form.registerField('profile.lastname', {})}
-      />
+          }}
+          TextFieldProps={{
+            label: 'First Name'
+          }}
+        />
+      </div>
+      <div>
+        <FFTextField
+          form={form}
+          fieldKeyPath='profile.lastname'
+          validation={(value, formState, callback) => {
+            const errorMsg = requiredValidation(value);
+            callback(errorMsg);
+          }}
+          TextFieldProps={{
+            label: 'Last Name'
+          }}
+        />
+      </div>
+      <div>
+        <ObjectFieldExample form={form} />
+      </div>
       <button
         ref={submitBtnRef}
         onClick={() => {
