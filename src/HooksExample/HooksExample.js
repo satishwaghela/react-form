@@ -1,6 +1,5 @@
 import React from 'react';
 import useForm from '../FormHook';
-import String from '../FormHook/Fields/String';
 
 export default function Example () {
   const submitBtnRef = React.createRef();
@@ -17,6 +16,8 @@ export default function Example () {
     }
   });
 
+  const { formState } = form;
+
   const requiredValidation = (value) => {
     if (!value) {
       return 'Required!';
@@ -30,37 +31,51 @@ export default function Example () {
 
   return (
     <>
-      <String
-        form={form}
-        fieldKeyPath='profile.firstname'
-        ref={form.registerField('profile.firstname')}
-        validation={(value, formState, fieldProps, callback) => {
-          setTimeout(() => {
-            const errorMsg = requiredValidation(value);
-            callback(errorMsg);
-          }, 5000);
+      <input
+        type='text'
+        value={form.getFieldValue(formState, 'profile.firstname', '')}
+        onChange={(e) => {
+          const value = e.target.value;
+          const newFormState = { ...formState };
+          form.setFieldValue(newFormState, 'profile.firstname', value);
+          form.setFieldError(newFormState, 'profile.firstname');
+          // const validator = form.getValidator(newFormState, 'profile.firstname', value);
+          // validator();
+          form.setFormState(newFormState);
         }}
-        fieldStateCustom={(metaData) => {
-          return (
-            <div>
-              {metaData.error && <p className='text-danger field-error'>{metaData.error}</p>}
-              {metaData.validating ? <p>Validating...</p> : null}
-            </div>
-          );
+        onBlur={(e) => {
+          const value = e.target.value;
+          const newFormState = { ...formState };
+          const validator = form.getValidator(newFormState, 'profile.firstname', value);
+          validator();
+          form.setFormState(newFormState);
         }}
+        ref={form.registerField('profile.firstname', {
+          validation: (value, formState, callback) => {
+            setTimeout(() => {
+              const errorMsg = requiredValidation(value);
+              callback(errorMsg);
+            }, 5000);
+          }
+        })}
       />
-      <String
-        form={form}
-        fieldKeyPath='profile.lastname'
-        ref={form.registerField('profile.lastname')}
-        validation={(value, formState, fieldProps, callback) => {
-          const errorMsg = requiredValidation(value);
-          callback(errorMsg);
+      <p className='text-danger'>{form.getFieldMetaData(formState, 'profile.firstname').error}</p>
+      <p className='text-danger'>{form.getFieldMetaData(formState, 'profile.firstname').validating ? 'Validating...' : null}</p>
+      <input
+        type='text'
+        value={form.getFieldValue(formState, 'profile.lastname', '')}
+        onChange={(e) => {
+          const value = e.target.value;
+          const newFormState = { ...formState };
+          form.setFieldValue(newFormState, 'profile.lastname', value);
+          form.setFormState(newFormState);
         }}
+        ref={form.registerField('profile.lastname', {})}
       />
       <button
         ref={submitBtnRef}
         onClick={() => {
+          console.log('form submit')
           const validity = form.getFormValidity();
           if (validity.valid) {
             console.log(form.formState.formData);

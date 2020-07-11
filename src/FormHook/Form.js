@@ -18,9 +18,12 @@ export default function useForm ({
     }
   });
 
-  const registerField = (fieldKeyPath) => {
+  const registerField = (fieldKeyPath, options = {}) => {
     const ref = createRef();
-    fields.current[fieldKeyPath] = ref;
+    fields.current[fieldKeyPath] = {
+      fieldRef: ref,
+      ...options
+    };
     return ref;
   };
 
@@ -43,6 +46,7 @@ export default function useForm ({
   const setFieldValue = (formState, fieldKeyPath, value) => {
     _.set(formState.formData, fieldKeyPath, value);
     setFieldTouched(formState, fieldKeyPath);
+    setFieldValidationDone(formState, fieldKeyPath, false);
     hasFormChanged.current = true;
   };
 
@@ -70,15 +74,30 @@ export default function useForm ({
     _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
   };
 
-  const runValidation = (validation, value, formState, fieldProps) => {
-    const { fieldKeyPath } = fieldProps;
+  const getFieldValidationDone = (formState, fieldKeyPath) => {
+    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
+  };
+
+  const setFieldValidationDone = (formState, fieldKeyPath, value) => {
+    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
+  };
+
+  const getValidator = (formState, fieldKeyPath, value) => {
+    const validation = fields.current[fieldKeyPath].validation;
+    return () => {
+      runValidation(validation, value, formState, fieldKeyPath);
+    }
+  }
+
+  const runValidation = (validation, value, formState, fieldKeyPath) => {
     setFieldError(formState, fieldKeyPath);
     setFieldValidating(formState, fieldKeyPath, true);
-    validation(value, formState, fieldProps, (error) => {
+    validation(value, formState, (error) => {
       const newState = { ...state };
       setFieldError(newState, fieldKeyPath, error);
       setFieldValidating(newState, fieldKeyPath, false);
       hasFormChanged.current = true;
+      setFieldValidationDone(newState, fieldKeyPath, true);
       setFormState(newState);
     });
   };
@@ -86,21 +105,16 @@ export default function useForm ({
   const validateForm = () => {
     const formState = { ...state };
     _.each(fields.current, (field, fieldKeyPath) => {
-      if (!field.current || !field.current.getValidationError) {
+      if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
       const isFieldTouched = getFieldTouched(state, fieldKeyPath);
       const fieldError = getFieldError(state, fieldKeyPath);
       const isFieldValidating = getFieldValidating(state, fieldKeyPath);
       if (!isFieldTouched && !fieldError && !isFieldValidating) {
-        setFieldError(formState, fieldKeyPath);
-        setFieldValidating(formState, fieldKeyPath, true);
-        field.current.getValidationError((error) => {
-          const newState = { ...state };
-          setFieldError(newState, fieldKeyPath, error);
-          setFieldValidating(newState, fieldKeyPath, false);
-          setFormState(newState);
-        });
+        const value = getFieldValue(formState, fieldKeyPath);
+        const validator = getValidator(formState, fieldKeyPath, value);
+        validator();
       }
     });
     setFormState(formState);
@@ -114,19 +128,21 @@ export default function useForm ({
       validatingFields: []
     };
     _.each(fields.current, (field, fieldKeyPath) => {
-      if (!field.current || !field.current.getValidationError) {
+      if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
       const isFieldTouched = getFieldTouched(state, fieldKeyPath);
       const fieldError = getFieldError(state, fieldKeyPath);
       const isFieldValidating = getFieldValidating(state, fieldKeyPath);
+      const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
       if (fieldError) {
         validity.invalidFields.push(fieldKeyPath);
       } else if (isFieldValidating) {
         validity.validatingFields.push(fieldKeyPath);
-      } else if (!isFieldTouched) {
+      } else if (!isFieldTouched || !isFieldValidationDone) {
         validity.validatingFields.push(fieldKeyPath);
-        field.current.getValidationError((error) => {
+        const value = getFieldValue(state, fieldKeyPath);
+        field.validation(value, state, (error) => {
           const index = validity.validatingFields.indexOf(fieldKeyPath);
           validity.validatingFields.splice(index, 1);
           if (error) {
@@ -153,6 +169,7 @@ export default function useForm ({
     setFieldTouched,
     getFieldError,
     setFieldError,
+    getValidator,
     runValidation,
     getFieldValidating,
     setFieldValidating,
