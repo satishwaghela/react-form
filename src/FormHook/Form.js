@@ -82,8 +82,23 @@ export default function useForm ({
     _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
   };
 
+  const getFieldValidation = (fieldKeyPath) => {
+    return fields.current[fieldKeyPath].validation;
+  }
+
+  const updatePreValidationMetaData = (value, formState, fieldKeyPath) => {
+    setFieldValidating(formState, fieldKeyPath, true);
+  }
+  
+  const updatePostValidationMetaData = (error, formState, fieldKeyPath) => {
+    setFieldError(formState, fieldKeyPath, error);
+    setFieldValidating(formState, fieldKeyPath, false);
+    setFieldValidationDone(formState, fieldKeyPath, true);
+    hasFormChanged.current = true;
+  }
+
   const getValidator = (formState, fieldKeyPath, value) => {
-    const validation = fields.current[fieldKeyPath].validation;
+    const validation = getFieldValidation(fieldKeyPath);
     if (!validation) {
       return () => { console.error(`No validation defined for field ${fieldKeyPath}`) }
     }
@@ -93,13 +108,10 @@ export default function useForm ({
   }
 
   const runValidation = (validation, value, formState, fieldKeyPath) => {
-    setFieldValidating(formState, fieldKeyPath, true);
+    updatePreValidationMetaData(value, formState, fieldKeyPath);
     validation(value, formState, (error) => {
       const newState = { ...state };
-      setFieldError(newState, fieldKeyPath, error);
-      setFieldValidating(newState, fieldKeyPath, false);
-      setFieldValidationDone(newState, fieldKeyPath, true);
-      hasFormChanged.current = true;
+      updatePostValidationMetaData(error, formState, fieldKeyPath);
       setFormState(newState);
     });
   };
@@ -171,6 +183,9 @@ export default function useForm ({
     setFieldTouched,
     getFieldError,
     setFieldError,
+    getFieldValidation,
+    updatePreValidationMetaData,
+    updatePostValidationMetaData,
     getValidator,
     runValidation,
     getFieldValidating,
