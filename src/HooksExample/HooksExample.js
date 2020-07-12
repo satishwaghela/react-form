@@ -1,6 +1,6 @@
 import React from 'react';
 import useForm from '../FormHook';
-import FFTextField from '../FormHook/Fields/FFTextField';
+import FTextField from '../FormHook/Fields/FTextField';
 import ObjectFieldExample from './ObjectFieldExample';
 
 export default function Example () {
@@ -32,14 +32,14 @@ export default function Example () {
   return (
     <>
       <div>
-        <FFTextField
+        <FTextField
           form={form}
           fieldKeyPath='profile.firstname'
           validation={(value, formState, callback) => {
-            setTimeout(() => {
+            // setTimeout(() => {
               const errorMsg = requiredValidation(value);
               callback(errorMsg);
-            }, 5000);
+            // }, 5000);
           }}
           TextFieldProps={{
             label: 'First Name'
@@ -47,7 +47,7 @@ export default function Example () {
         />
       </div>
       <div>
-        <FFTextField
+        <FTextField
           form={form}
           fieldKeyPath='profile.lastname'
           validation={(value, formState, callback) => {

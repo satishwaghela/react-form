@@ -46,7 +46,6 @@ export default function useForm ({
   const setFieldValue = (formState, fieldKeyPath, value) => {
     _.set(formState.formData, fieldKeyPath, value);
     setFieldTouched(formState, fieldKeyPath);
-    setFieldValidationDone(formState, fieldKeyPath, false);
     hasFormChanged.current = true;
   };
 
@@ -74,14 +73,6 @@ export default function useForm ({
     _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
   };
 
-  const getFieldValidationDone = (formState, fieldKeyPath) => {
-    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
-  };
-
-  const setFieldValidationDone = (formState, fieldKeyPath, value) => {
-    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
-  };
-
   const getValidator = (formState, fieldKeyPath, value) => {
     const validation = fields.current[fieldKeyPath].validation;
     if (!validation) {
@@ -100,7 +91,6 @@ export default function useForm ({
       setFieldError(newState, fieldKeyPath, error);
       setFieldValidating(newState, fieldKeyPath, false);
       hasFormChanged.current = true;
-      setFieldValidationDone(newState, fieldKeyPath, true);
       setFormState(newState);
     });
   };
@@ -111,14 +101,9 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const isFieldTouched = getFieldTouched(state, fieldKeyPath);
-      const fieldError = getFieldError(state, fieldKeyPath);
-      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
-      if (!isFieldTouched && !fieldError && !isFieldValidating) {
-        const value = getFieldValue(formState, fieldKeyPath);
-        const validator = getValidator(formState, fieldKeyPath, value);
-        validator();
-      }
+      const value = getFieldValue(formState, fieldKeyPath);
+      const validator = getValidator(formState, fieldKeyPath, value);
+      validator();
     });
     setFormState(formState);
   };
@@ -134,26 +119,17 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const fieldError = getFieldError(state, fieldKeyPath);
-      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
-      const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
-      if (fieldError) {
-        validity.invalidFields.push(fieldKeyPath);
-      } else if (isFieldValidating) {
-        validity.validatingFields.push(fieldKeyPath);
-      } else if (!isFieldValidationDone) {
-        validity.validatingFields.push(fieldKeyPath);
-        const value = getFieldValue(state, fieldKeyPath);
-        field.validation(value, state, (error) => {
-          const index = validity.validatingFields.indexOf(fieldKeyPath);
-          validity.validatingFields.splice(index, 1);
-          if (error) {
-            validity.invalidFields.push(fieldKeyPath);
-          }
-        });
-      } else {
-        validity.validFields.push(fieldKeyPath);
-      }
+      validity.validatingFields.push(fieldKeyPath);
+      const value = getFieldValue(state, fieldKeyPath);
+      field.validation(value, state, (error) => {
+        const index = validity.validatingFields.indexOf(fieldKeyPath);
+        validity.validatingFields.splice(index, 1);
+        if (error) {
+          validity.invalidFields.push(fieldKeyPath);
+        } else {
+          validity.validFields.push(fieldKeyPath);
+        }
+      });
     });
     validity.valid = !validity.invalidFields.length && !validity.validatingFields.length;
     return validity;

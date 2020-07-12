@@ -1,12 +1,12 @@
 import React from 'react';
-import FFObjectField from '../FormHook/Fields/FFObjectField';
-import FFTextField from '../FormHook/Fields/FFTextField';
+import FObjectField from '../FormHook/Fields/FObjectField';
+import FTextField from '../FormHook/Fields/FTextField';
 
 export default function ObjectFieldExample (props) {
   const { form } = props;
 
   return (
-    <FFObjectField
+    <FObjectField
       form={form}
       fieldKeyPath='permission'
       validation={(value = {}, formState, callback) => {
@@ -27,7 +27,7 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
   const fieldKeyPathGroup = fieldKeyPath + '.group';
   return (
     <>
-      <FFTextField
+      <FTextField
         form={form}
         fieldKeyPath={fieldKeyPathRole}
         onValueChange={(value, newformState) => {
@@ -38,7 +38,7 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
           label: 'Role'
         }}
       />
-      <FFTextField
+      <FTextField
         form={form}
         fieldKeyPath={fieldKeyPathUser}
         onValueChange={(value, newformState) => {
@@ -49,7 +49,7 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
           label: 'User'
         }}
       />
-      <FFTextField
+      <FTextField
         form={form}
         fieldKeyPath={fieldKeyPathGroup}
         onValueChange={(value, newformState) => {
