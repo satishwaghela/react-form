@@ -1,7 +1,9 @@
 import React from 'react';
 import useForm from '../FormHook';
 import FTextField from '../FormHook/Fields/FTextField';
+import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
+import { requiredValidation } from './validations';
 
 export default function Example () {
   const submitBtnRef = React.createRef();
@@ -9,20 +11,15 @@ export default function Example () {
   const form = useForm({
     formData: {},
     onFormChange: () => {
-      const { valid } = form.getFormValidity();
-      if (valid) {
+      const validity = form.getFormValidity();
+      console.log(validity);
+      if (validity.valid) {
         submitBtnRef.current.classList.remove('disable');
       } else {
         submitBtnRef.current.classList.add('disable');
       }
     }
   });
-
-  const requiredValidation = (value) => {
-    if (!value) {
-      return 'Required!';
-    }
-  };
 
   const buttonProps = {};
   if (!submitBtnRef.current) {
@@ -32,14 +29,15 @@ export default function Example () {
   return (
     <>
       <div>
+        <AsyncValidationExample form={form} />
+      </div>
+      <div>
         <FTextField
           form={form}
           fieldKeyPath='profile.firstname'
           validation={(value, formState, callback) => {
-            // setTimeout(() => {
-              const errorMsg = requiredValidation(value);
-              callback(errorMsg);
-            // }, 5000);
+            const errorMsg = requiredValidation(value);
+            callback(errorMsg);
           }}
           TextFieldProps={{
             label: 'First Name'

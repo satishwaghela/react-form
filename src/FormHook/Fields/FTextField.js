@@ -30,7 +30,7 @@ export default function FFTextField(props) {
 
   return (
     <TextField
-      error={!!fieldMetaData.error}
+      error={!fieldMetaData.validating && !!fieldMetaData.error}
       helperText={helperText}
       {...TextFieldProps}
       value={form.getFieldValue(formState, fieldKeyPath, '')}
