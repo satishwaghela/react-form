@@ -1,6 +1,9 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import useForm from '../FormHook';
 import FTextField from '../FormHook/Fields/FTextField';
+import FCheckbox from '../FormHook/Fields/FCheckbox';
 import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
 import { requiredValidation } from './validations';
@@ -28,10 +31,10 @@ export default function Example () {
 
   return (
     <>
-      <div>
+      <Grid item xs={6}>
         <AsyncValidationExample form={form} />
-      </div>
-      <div>
+      </Grid>
+      <Grid item xs={6}>
         <FTextField
           form={form}
           fieldKeyPath='profile.firstname'
@@ -43,8 +46,8 @@ export default function Example () {
             label: 'First Name'
           }}
         />
-      </div>
-      <div>
+      </Grid>
+      <Grid item xs={6}>
         <FTextField
           form={form}
           fieldKeyPath='profile.lastname'
@@ -56,26 +59,40 @@ export default function Example () {
             label: 'Last Name'
           }}
         />
-      </div>
-      <div>
+      </Grid>
+      <Grid container xs={9}>
         <ObjectFieldExample form={form} />
-      </div>
-      <button
-        ref={submitBtnRef}
-        onClick={() => {
-          console.log('form submit')
-          const validity = form.getFormValidity();
-          if (validity.valid) {
-            console.log(form.formState.formData);
-          } else {
-            console.log(validity);
-            form.validateForm();
-          }
+      </Grid>
+      <FCheckbox
+        form={form}
+        fieldKeyPath='ack'
+        validation={(value, formState, callback) => {
+          const errorMsg = value ? '' : 'Please accept terms & conditions';
+          callback(errorMsg);
         }}
-        {...buttonProps}
-      >
-        Submit
-      </button>
+        FormControlLabelProps={{
+          label: 'Terms & Conditions'
+        }}
+      />
+      <div>
+        <Button
+          ref={submitBtnRef}
+          {...buttonProps}
+          variant="contained" color="primary"
+          onClick={() => {
+            console.log('form submit')
+            const validity = form.getFormValidity();
+            if (validity.valid) {
+              console.log(form.formState.formData);
+            } else {
+              console.log(validity);
+              form.validateForm();
+            }
+          }}
+        >
+          Submit
+        </Button>
+      </div>
     </>
   );
 }

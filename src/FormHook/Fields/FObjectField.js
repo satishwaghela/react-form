@@ -1,5 +1,6 @@
 import React from 'react';
-import FormHelperText from '@material-ui/core/FormHelperText';
+
+import { getHelperText } from './FieldUtils';
 
 export default function FFObjectField (props) {
   const { form, fieldKeyPath, validation, Child } = props;
@@ -30,9 +31,7 @@ export default function FFObjectField (props) {
           validation: validation
         })}
       >
-        {fieldMetaData.error && (
-          <FormHelperText error>{fieldMetaData.error}</FormHelperText>
-        )}
+        {getHelperText(fieldMetaData)}
       </div>
     </>
   )
