@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { handleChangeFlow, getHelperText } from './FieldUtils';
 
-export default function FFTextField(props) {
+export default function FTextField(props) {
   const { TextFieldProps, form, fieldKeyPath, validation, onValueChange } = props;
   const { formState } = form;
   const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);

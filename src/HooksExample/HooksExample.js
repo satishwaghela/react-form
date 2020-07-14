@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import useForm from '../FormHook';
 import FTextField from '../FormHook/Fields/FTextField';
 import FCheckbox from '../FormHook/Fields/FCheckbox';
+import FAutoComplete from '../FormHook/Fields/FAutoComplete';
 import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
 import { requiredValidation } from './validations';
@@ -63,6 +64,21 @@ export default function Example () {
       <Grid container xs={9}>
         <ObjectFieldExample form={form} />
       </Grid>
+      <Grid container xs={9}>
+        <FAutoComplete
+          form={form}
+          fieldKeyPath='dummyname'
+          valueKey='name'
+          AutocompleteProps={{
+            multiple: true,
+            options: [{ name: 'Bob' }, { name: 'Alice' }],
+            getOptionLabel: (option) => option.name
+          }}
+          TextFieldProps={{
+            label: 'Combo box'
+          }}
+        />
+      </Grid>
       <FCheckbox
         form={form}
         fieldKeyPath='ack'
@@ -78,9 +94,9 @@ export default function Example () {
         <Button
           ref={submitBtnRef}
           {...buttonProps}
-          variant="contained" color="primary"
+          variant='contained' color='primary'
           onClick={() => {
-            console.log('form submit')
+            console.log('form submit');
             const validity = form.getFormValidity();
             if (validity.valid) {
               console.log(form.formState.formData);

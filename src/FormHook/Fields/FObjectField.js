@@ -2,8 +2,8 @@ import React from 'react';
 
 import { getHelperText } from './FieldUtils';
 
-export default function FFObjectField (props) {
-  const { form, fieldKeyPath, validation, Child } = props;
+export default function FObjectField (props) {
+  const { form, fieldKeyPath, validation, Child, ChildProps = {} } = props;
   const { formState } = form;
   const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);
 
@@ -12,15 +12,16 @@ export default function FFObjectField (props) {
       const validator = form.getValidator(newFormState, fieldKeyPath, object);
       validator();
     }
-  }
+  };
 
   const clearObjectError = (newFormState) => {
     form.setFieldError(newFormState, fieldKeyPath);
-  }
+  };
 
   return (
     <>
       <Child
+        {...ChildProps}
         form={form}
         validateObject={validateObject}
         clearObjectError={clearObjectError}
@@ -34,5 +35,5 @@ export default function FFObjectField (props) {
         {getHelperText(fieldMetaData)}
       </div>
     </>
-  )
+  );
 }
