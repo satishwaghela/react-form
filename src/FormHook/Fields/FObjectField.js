@@ -9,8 +9,8 @@ export default function FObjectField (props) {
 
   const validateObject = () => {
     if (validation) {
-      form.setFormState(draftState => {
-        const object = form.getFieldValue(draftState, fieldKeyPath);
+      form.setFormState((draftState, prevState) => {
+        const object = form.getFieldValue(prevState, fieldKeyPath);
         const validator = form.getValidator(fieldKeyPath, object);
         validator();
       });
