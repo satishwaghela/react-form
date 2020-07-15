@@ -30,10 +30,16 @@ export default function useForm ({
 
   const setFormState = (setCallback) => {
     setState((prevState) => {
-      const newState = produce(prevState, (draftState) => {
-        setCallback(draftState, prevState);
-      });
-      return newState;
+      const draftState = { ...prevState };
+      setCallback(draftState);
+      return draftState;
+    });
+  };
+
+  const getLatestFormState = (callback) => {
+    setState((prevState) => {
+      callback(prevState);
+      return prevState;
     });
   };
 
@@ -182,6 +188,7 @@ export default function useForm ({
     fields,
     registerField,
     setFormState,
+    getLatestFormState,
     getFieldMetaData,
     getFieldValue,
     setFieldValue,
