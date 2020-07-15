@@ -46,6 +46,5 @@ FObjectField.propTypes = {
   ChildProps: PropTypes.object,
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
-  validation: PropTypes.func,
-  valueKey: PropTypes.string
+  validation: PropTypes.func
 };

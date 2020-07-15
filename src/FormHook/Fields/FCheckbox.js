@@ -41,6 +41,5 @@ FCheckbox.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
-  onValueChange: PropTypes.func,
-  valueKey: PropTypes.string
+  onValueChange: PropTypes.func
 };
