@@ -101,23 +101,23 @@ export default function useForm ({
     hasFormChanged.current = true;
   };
 
-  const getValidator = (formState, fieldKeyPath, value) => {
+  const getValidator = (fieldKeyPath, value) => {
     const validation = getFieldValidation(fieldKeyPath);
     if (!validation) {
       return () => { console.info(`No validation defined for field ${fieldKeyPath}`); };
     }
     return () => {
-      runValidation(validation, value, formState, fieldKeyPath);
+      runValidation(validation, value, fieldKeyPath);
     };
   };
 
-  const runValidation = (validation, value, formState, fieldKeyPath) => {
+  const runValidation = (validation, value, fieldKeyPath) => {
     setFormState((draftState) => {
       updatePreValidationMetaData(value, draftState, fieldKeyPath);
-    });
-    validation(value, formState, (error) => {
-      setFormState((draftState) => {
-        updatePostValidationMetaData(error, draftState, fieldKeyPath);
+      validation(value, draftState, (error) => {
+        setFormState((draftState) => {
+          updatePostValidationMetaData(error, draftState, fieldKeyPath);
+        });
       });
     });
   };
@@ -134,7 +134,7 @@ export default function useForm ({
         const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
         if (!isFieldTouched && !fieldError && !isFieldValidating && !isFieldValidationDone) {
           const value = getFieldValue(draftState, fieldKeyPath);
-          const validator = getValidator(draftState, fieldKeyPath, value);
+          const validator = getValidator(fieldKeyPath, value);
           validator();
         }
       });

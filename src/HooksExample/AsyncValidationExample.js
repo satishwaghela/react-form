@@ -11,19 +11,16 @@ export default function AsyncValidationExample (props) {
     <FTextField
       form={form}
       fieldKeyPath='username'
-      onValueChange={(value, formState) => {
-        window.clearTimeout(timeoutId.current);
-      }}
       validation={(value, formState, callback) => {
+        window.clearTimeout(timeoutId.current);
         const requiredMsg = requiredValidation(value);
         if (requiredMsg) {
           callback(requiredMsg);
         } else {
           timeoutId.current = setTimeout(() => {
-            const _callback = callback;
             const isUsernameTaken = takenUsernames.includes(value);
             const errorMsg = isUsernameTaken ? 'Username is taken' : undefined;
-            _callback(errorMsg);
+            callback(errorMsg);
           }, 5000);
         }
       }}

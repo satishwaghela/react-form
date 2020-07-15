@@ -14,12 +14,12 @@ export default function ObjectFieldExample (props) {
         if (!value.role && !value.user && !value.group) {
           callback('Role/User/Group is required');
         } else {
-          callback()
+          callback();
         }
       }}
       Child={ObjectChild}
     />
-  )
+  );
 }
 
 function ObjectChild ({ validateObject, fieldKeyPath, form }) {
@@ -32,9 +32,8 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
         <FTextField
           form={form}
           fieldKeyPath={fieldKeyPathRole}
-          onValueChange={(value, newformState) => {
-            const object = form.getFieldValue(newformState, fieldKeyPath);
-            validateObject(object, newformState)
+          onValueChange={(value) => {
+            validateObject();
           }}
           TextFieldProps={{
             label: 'Role'
@@ -45,9 +44,8 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
         <FTextField
           form={form}
           fieldKeyPath={fieldKeyPathUser}
-          onValueChange={(value, newformState) => {
-            const object = form.getFieldValue(newformState, fieldKeyPath);
-            validateObject(object, newformState)
+          onValueChange={(value) => {
+            validateObject();
           }}
           TextFieldProps={{
             label: 'User'
@@ -58,9 +56,8 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
         <FTextField
           form={form}
           fieldKeyPath={fieldKeyPathGroup}
-          onValueChange={(value, newformState) => {
-            const object = form.getFieldValue(newformState, fieldKeyPath);
-            validateObject(object, newformState)
+          onValueChange={(value) => {
+            validateObject();
           }}
           TextFieldProps={{
             label: 'Group'
@@ -68,6 +65,5 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
         />
       </Grid>
     </>
-  )
+  );
 }
-
