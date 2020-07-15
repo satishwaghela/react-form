@@ -55,6 +55,9 @@ export default function FTextField (props) {
         {...AutocompleteProps}
         onChange={handleChange}
         renderInput={(params) => <TextField {...params} {...TextFieldProps} />}
+        ref={form.registerField(fieldKeyPath, {
+          validation: validation
+        })}
       />
       {getHelperText(fieldMetaData)}
     </>

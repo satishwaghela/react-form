@@ -2,17 +2,16 @@ import React from 'react';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 export function handleChangeFlow (value, fieldKeyPath, onValueChange, validation, form) {
-  const { formState } = form;
-  const newFormState = { ...formState };
-  form.setFieldValue(newFormState, fieldKeyPath, value);
-  if (onValueChange) {
-    onValueChange(value, newFormState);
-  }
-  if (validation) {
-    const validator = form.getValidator(newFormState, fieldKeyPath, value);
-    validator();
-  }
-  form.setFormState(newFormState);
+  form.setFormState((draftState) => {
+    form.setFieldValue(draftState, fieldKeyPath, value);
+    if (onValueChange) {
+      onValueChange(value, draftState);
+    }
+    if (validation) {
+      const validator = form.getValidator(draftState, fieldKeyPath, value);
+      validator();
+    }
+  });
 }
 
 export function getHelperText (fieldMetaData) {
