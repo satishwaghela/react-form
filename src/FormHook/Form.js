@@ -181,7 +181,7 @@ export default function useForm ({
         validity.invalidFields.push(fieldKeyPath);
       } else if (!isFieldValidationDone) {
         validity.validatingFields.push(fieldKeyPath);
-        const value = getFieldValue(state, fieldKeyPath);
+        const value = getFieldValue(fieldKeyPath);
         field.validation(value, state, (error) => {
           const index = validity.validatingFields.indexOf(fieldKeyPath);
           validity.validatingFields.splice(index, 1);
