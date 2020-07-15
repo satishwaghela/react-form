@@ -4,14 +4,13 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { handleChangeFlow, getHelperText } from './FieldUtils';
 
-export default function FTextField (props) {
+export default function FAutoComplete (props) {
   const {
     AutocompleteProps = {}, TextFieldProps = {},
     form, fieldKeyPath, validation, onValueChange,
     valueKey = 'value'
   } = props;
-  const { formState } = form;
-  const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);
+  const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const { multiple, options } = AutocompleteProps;
 
@@ -32,7 +31,7 @@ export default function FTextField (props) {
     emptyValue = '';
   }
 
-  const value = form.getFieldValue(formState, fieldKeyPath, emptyValue);
+  const value = form.getFieldValue(fieldKeyPath, emptyValue);
 
   let selected;
   if (multiple) {

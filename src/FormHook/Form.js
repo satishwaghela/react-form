@@ -47,65 +47,81 @@ export default function useForm ({
     return fieldKeyPath.split('.').join('.children.');
   };
 
-  const getFieldMetaData = (formState, fieldKeyPath) => {
+  const getFieldMetaData = (fieldKeyPath, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}`, {});
   };
 
-  const getFieldValue = (formState, fieldKeyPath, defaultValue) => {
+  const getFieldValue = (fieldKeyPath, defaultValue, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.formData, fieldKeyPath, defaultValue);
   };
 
-  const setFieldValue = (formState, fieldKeyPath, value) => {
-    _.set(formState.formData, fieldKeyPath, value);
-    setFieldTouched(formState, fieldKeyPath);
-    setFieldValidationDone(formState, fieldKeyPath, false);
+  const setFieldValue = (fieldKeyPath, value) => {
+    setFormState((draftState) => {
+      _.set(draftState.formData, fieldKeyPath, value);
+    });
+    setFieldTouched(fieldKeyPath);
+    setFieldValidationDone(fieldKeyPath, false);
     hasFormChanged.current = true;
   };
 
-  const getFieldTouched = (formState, fieldKeyPath) => {
+  const getFieldTouched = (fieldKeyPath, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, false);
   };
 
-  const setFieldTouched = (formState, fieldKeyPath) => {
-    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, true);
+  const setFieldTouched = (fieldKeyPath) => {
+    setFormState((draftState) => {
+      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, true);
+    });
   };
 
-  const getFieldValidationDone = (formState, fieldKeyPath) => {
+  const getFieldValidationDone = (fieldKeyPath, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
   };
 
-  const setFieldValidationDone = (formState, fieldKeyPath, value) => {
-    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
+  const setFieldValidationDone = (fieldKeyPath, value) => {
+    setFormState((draftState) => {
+      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
+    });
   };
 
-  const getFieldError = (formState, fieldKeyPath) => {
+  const getFieldError = (fieldKeyPath, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`);
   };
 
-  const setFieldError = (formState, fieldKeyPath, errorMsg) => {
-    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`, errorMsg);
+  const setFieldError = (fieldKeyPath, errorMsg) => {
+    setFormState((draftState) => {
+      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`, errorMsg);
+    });
   };
 
-  const getFieldValidating = (formState, fieldKeyPath) => {
+  const getFieldValidating = (fieldKeyPath, _formState) => {
+    const formState = _formState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, false);
   };
 
-  const setFieldValidating = (formState, fieldKeyPath, value) => {
-    _.set(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
+  const setFieldValidating = (fieldKeyPath, value) => {
+    setFormState((draftState) => {
+      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
+    });
   };
 
   const getFieldValidation = (fieldKeyPath) => {
     return fields.current[fieldKeyPath].validation;
   };
 
-  const updatePreValidationMetaData = (value, formState, fieldKeyPath) => {
-    setFieldValidating(formState, fieldKeyPath, true);
+  const updatePreValidationMetaData = (fieldKeyPath) => {
+    setFieldValidating(fieldKeyPath, true);
   };
 
-  const updatePostValidationMetaData = (error, formState, fieldKeyPath) => {
-    setFieldError(formState, fieldKeyPath, error);
-    setFieldValidating(formState, fieldKeyPath, false);
-    setFieldValidationDone(formState, fieldKeyPath, true);
+  const updatePostValidationMetaData = (fieldKeyPath, error) => {
+    setFieldError(fieldKeyPath, error);
+    setFieldValidating(fieldKeyPath, false);
+    setFieldValidationDone(fieldKeyPath, true);
     hasFormChanged.current = true;
   };
 
@@ -121,11 +137,9 @@ export default function useForm ({
 
   const runValidation = (validation, value, fieldKeyPath) => {
     setFormState((draftState) => {
-      updatePreValidationMetaData(value, draftState, fieldKeyPath);
+      updatePreValidationMetaData(fieldKeyPath);
       validation(value, draftState, (error) => {
-        setFormState((draftState) => {
-          updatePostValidationMetaData(error, draftState, fieldKeyPath);
-        });
+        updatePostValidationMetaData(fieldKeyPath, error);
       });
     });
   };
@@ -135,12 +149,12 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const isFieldTouched = getFieldTouched(state, fieldKeyPath);
-      const fieldError = getFieldError(state, fieldKeyPath);
-      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
-      const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
+      const isFieldTouched = getFieldTouched(fieldKeyPath);
+      const fieldError = getFieldError(fieldKeyPath);
+      const isFieldValidating = getFieldValidating(fieldKeyPath);
+      const isFieldValidationDone = getFieldValidationDone(fieldKeyPath);
       if (!isFieldTouched && !fieldError && !isFieldValidating && !isFieldValidationDone) {
-        const value = getFieldValue(state, fieldKeyPath);
+        const value = getFieldValue(fieldKeyPath);
         const validator = getValidator(fieldKeyPath, value);
         validator();
       }
@@ -158,9 +172,9 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const fieldError = getFieldError(state, fieldKeyPath);
-      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
-      const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
+      const fieldError = getFieldError(fieldKeyPath);
+      const isFieldValidating = getFieldValidating(fieldKeyPath);
+      const isFieldValidationDone = getFieldValidationDone(fieldKeyPath);
       if (isFieldValidating) {
         validity.validatingFields.push(fieldKeyPath);
       } else if (fieldError) {

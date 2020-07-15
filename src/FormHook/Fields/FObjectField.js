@@ -4,21 +4,20 @@ import { getHelperText } from './FieldUtils';
 
 export default function FObjectField (props) {
   const { form, fieldKeyPath, validation, Child, ChildProps = {} } = props;
-  const { formState } = form;
-  const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);
+  const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const validateObject = () => {
     if (validation) {
       form.getLatestFormState((formState) => {
-        const object = form.getFieldValue(formState, fieldKeyPath);
+        const object = form.getFieldValue(fieldKeyPath, formState);
         const validator = form.getValidator(fieldKeyPath, object);
         validator();
       });
     }
   };
 
-  const clearObjectError = (newFormState) => {
-    form.setFieldError(newFormState, fieldKeyPath);
+  const clearObjectError = () => {
+    form.setFieldError(fieldKeyPath);
   };
 
   return (

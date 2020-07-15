@@ -7,8 +7,7 @@ import { handleChangeFlow, getHelperText } from './FieldUtils';
 
 export default function FTextField (props) {
   const { FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation, onValueChange } = props;
-  const { formState } = form;
-  const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);
+  const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const handleChange = (event) => {
     const value = event.target.checked;
@@ -22,7 +21,7 @@ export default function FTextField (props) {
         control={(
           <Checkbox
             {...CheckboxProps}
-            checked={form.getFieldValue(formState, fieldKeyPath, false)}
+            checked={form.getFieldValue(fieldKeyPath, false)}
             onChange={handleChange}
             ref={form.registerField(fieldKeyPath, {
               validation: validation

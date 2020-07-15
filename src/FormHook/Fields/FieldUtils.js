@@ -2,9 +2,7 @@ import React from 'react';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 export function handleChangeFlow (value, fieldKeyPath, onValueChange, validation, form) {
-  form.setFormState((draftState) => {
-    form.setFieldValue(draftState, fieldKeyPath, value);
-  });
+  form.setFieldValue(fieldKeyPath, value);
   if (onValueChange) {
     onValueChange(value);
   }

@@ -4,8 +4,7 @@ import { handleChangeFlow, getHelperText } from './FieldUtils';
 
 export default function FTextField(props) {
   const { TextFieldProps, form, fieldKeyPath, validation, onValueChange } = props;
-  const { formState } = form;
-  const fieldMetaData = form.getFieldMetaData(formState, fieldKeyPath);
+  const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -18,7 +17,7 @@ export default function FTextField(props) {
         error={!fieldMetaData.validating && !!fieldMetaData.error}
         fullWidth
         {...TextFieldProps}
-        value={form.getFieldValue(formState, fieldKeyPath, '')}
+        value={form.getFieldValue(fieldKeyPath, '')}
         onChange={handleChange}
         ref={form.registerField(fieldKeyPath, {
           validation: validation
