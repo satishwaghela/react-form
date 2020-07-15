@@ -1,5 +1,7 @@
+import _ from 'lodash';
+
 export function requiredValidation (value) {
-  if (!value) {
+  if (_.isEmpty(value)) {
     return 'Required!';
   }
 };

@@ -7,15 +7,24 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { handleChangeFlow, getHelperText } from './FieldUtils';
 
-export default function FCheckbox (props) {
+export default function FCheckboxGroup (props) {
   const {
     FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation, onValueChange,
-    controlType = 'checkbox'
+    checkboxOptions, controlType = 'checkbox'
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
+  const value = form.getFieldValue(fieldKeyPath, []);
+
   const handleChange = (event) => {
-    const value = event.target.checked;
+    const checked = event.target.checked;
+    const name = event.target.name;
+    if (checked) {
+      value.push(name);
+    } else {
+      const index = value.indexOf(name);
+      value.splice(index, 1);
+    }
     handleChangeFlow(value, fieldKeyPath, onValueChange, validation, form);
   };
 
@@ -28,30 +37,36 @@ export default function FCheckbox (props) {
 
   return (
     <>
-      <FormControlLabel
-        {...FormControlLabelProps}
-        control={(
-          <ControlComp
-            {...CheckboxProps}
-            checked={form.getFieldValue(fieldKeyPath, false)}
-            onChange={handleChange}
-            ref={form.registerField(fieldKeyPath, {
-              validation: validation
-            })}
-          />
-        )}
-      />
+      {checkboxOptions.map((option, i) => (
+        <FormControlLabel
+          key={i}
+          {...FormControlLabelProps}
+          label={option.label}
+          control={(
+            <ControlComp
+              {...CheckboxProps}
+              name={option.value}
+              checked={value.includes(option.value)}
+              onChange={handleChange}
+            />
+          )}
+          ref={form.registerField(fieldKeyPath, {
+            validation: validation
+          })}
+        />
+      ))}
       {getHelperText(fieldMetaData)}
     </>
   );
 }
 
-FCheckbox.propTypes = {
+FCheckboxGroup.propTypes = {
   FormControlLabelProps: PropTypes.object,
   CheckboxProps: PropTypes.object,
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
   onValueChange: PropTypes.func,
+  checkboxOptions: PropTypes.array,
   controlType: PropTypes.string
 };

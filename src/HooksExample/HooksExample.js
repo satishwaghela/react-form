@@ -5,6 +5,8 @@ import useForm from '../FormHook';
 import FTextField from '../FormHook/Fields/FTextField';
 import FCheckbox from '../FormHook/Fields/FCheckbox';
 import FAutoComplete from '../FormHook/Fields/FAutoComplete';
+import FCheckboxGroup from '../FormHook/Fields/FCheckboxGroup';
+import FRadioGroup from '../FormHook/Fields/FRadioGroup';
 import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
 import { requiredValidation } from './validations';
@@ -61,10 +63,10 @@ export default function Example () {
           }}
         />
       </Grid>
-      <Grid container xs={9}>
+      <Grid container>
         <ObjectFieldExample form={form} />
       </Grid>
-      <Grid container xs={9}>
+      <Grid item xs={9}>
         <FAutoComplete
           form={form}
           fieldKeyPath='dummyname'
@@ -76,6 +78,46 @@ export default function Example () {
           }}
           TextFieldProps={{
             label: 'Combo box'
+          }}
+        />
+      </Grid>
+      <Grid item xs={9}>
+        <FCheckboxGroup
+          form={form}
+          fieldKeyPath='assignResp'
+          checkboxOptions={[{
+            label: 'Gilad Gray',
+            value: 'Gilad Gray'
+          }, {
+            label: 'Jason Killian',
+            value: 'Jason Killian'
+          }, {
+            label: 'Antoine Llorca',
+            value: 'Antoine Llorca'
+          }]}
+          validation={(value, formState, callback) => {
+            const errorMsg = requiredValidation(value);
+            callback(errorMsg);
+          }}
+        />
+      </Grid>
+      <Grid item xs={9}>
+        <FRadioGroup
+          form={form}
+          fieldKeyPath='gender'
+          radioOptions={[{
+            label: 'Female',
+            value: 'female'
+          }, {
+            label: 'Male',
+            value: 'male'
+          }, {
+            label: 'Other',
+            value: 'other'
+          }]}
+          validation={(value, formState, callback) => {
+            const errorMsg = requiredValidation(value);
+            callback(errorMsg);
           }}
         />
       </Grid>
