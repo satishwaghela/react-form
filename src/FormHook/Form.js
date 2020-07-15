@@ -136,8 +136,8 @@ export default function useForm ({
   };
 
   const runValidation = (validation, value, fieldKeyPath) => {
-    setFormState((draftState) => {
-      updatePreValidationMetaData(fieldKeyPath);
+    updatePreValidationMetaData(fieldKeyPath);
+    getLatestFormState((draftState) => {
       validation(value, draftState, (error) => {
         updatePostValidationMetaData(fieldKeyPath, error);
       });
