@@ -123,21 +123,19 @@ export default function useForm ({
   };
 
   const validateForm = () => {
-    setFormState((draftState) => {
-      _.each(fields.current, (field, fieldKeyPath) => {
-        if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
-          return;
-        }
-        const isFieldTouched = getFieldTouched(state, fieldKeyPath);
-        const fieldError = getFieldError(state, fieldKeyPath);
-        const isFieldValidating = getFieldValidating(state, fieldKeyPath);
-        const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
-        if (!isFieldTouched && !fieldError && !isFieldValidating && !isFieldValidationDone) {
-          const value = getFieldValue(draftState, fieldKeyPath);
-          const validator = getValidator(fieldKeyPath, value);
-          validator();
-        }
-      });
+    _.each(fields.current, (field, fieldKeyPath) => {
+      if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
+        return;
+      }
+      const isFieldTouched = getFieldTouched(state, fieldKeyPath);
+      const fieldError = getFieldError(state, fieldKeyPath);
+      const isFieldValidating = getFieldValidating(state, fieldKeyPath);
+      const isFieldValidationDone = getFieldValidationDone(state, fieldKeyPath);
+      if (!isFieldTouched && !fieldError && !isFieldValidating && !isFieldValidationDone) {
+        const value = getFieldValue(state, fieldKeyPath);
+        const validator = getValidator(fieldKeyPath, value);
+        validator();
+      }
     });
   };
 
