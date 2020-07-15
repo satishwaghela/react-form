@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { handleChangeFlow, getHelperText } from './FieldUtils';
 
-export default function FTextField (props) {
+export default function FCheckbox (props) {
   const { FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation, onValueChange } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
@@ -33,3 +34,13 @@ export default function FTextField (props) {
     </>
   );
 }
+
+FCheckbox.propTypes = {
+  FormControlLabelProps: PropTypes.object,
+  CheckboxProps: PropTypes.object,
+  form: PropTypes.object,
+  fieldKeyPath: PropTypes.string,
+  validation: PropTypes.func,
+  onValueChange: PropTypes.func,
+  valueKey: PropTypes.string
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { getHelperText } from './FieldUtils';
 
@@ -39,3 +40,12 @@ export default function FObjectField (props) {
     </>
   );
 }
+
+FObjectField.propTypes = {
+  Child: PropTypes.any,
+  ChildProps: PropTypes.object,
+  form: PropTypes.object,
+  fieldKeyPath: PropTypes.string,
+  validation: PropTypes.func,
+  valueKey: PropTypes.string
+};

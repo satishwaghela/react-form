@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -62,3 +63,13 @@ export default function FAutoComplete (props) {
     </>
   );
 }
+
+FAutoComplete.propTypes = {
+  AutocompleteProps: PropTypes.object,
+  TextFieldProps: PropTypes.object,
+  form: PropTypes.object,
+  fieldKeyPath: PropTypes.string,
+  validation: PropTypes.func,
+  onValueChange: PropTypes.func,
+  valueKey: PropTypes.string
+};
