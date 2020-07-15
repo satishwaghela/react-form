@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, createRef } from 'react';
 import _ from 'lodash';
-import produce from 'immer';
 
 export default function useForm ({
   formData = {}, metaData = {},
