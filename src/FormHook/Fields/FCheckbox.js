@@ -5,18 +5,27 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { handleChangeFlow, getHelperText } from './FieldUtils';
+import { getHelperText, useCall } from './FieldUtils';
 
 export default function FCheckbox (props) {
   const {
-    FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation, onValueChange,
+    FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation,
     controlType = 'checkbox'
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
+  const value = form.getFieldValue(fieldKeyPath, false);
+
+  useCall(() => {
+    if (validation) {
+      const validator = form.getValidator(fieldKeyPath, value);
+      validator();
+    }
+  }, [value]);
+
   const handleChange = (event) => {
     const value = event.target.checked;
-    handleChangeFlow(value, fieldKeyPath, onValueChange, validation, form);
+    form.setFieldValue(fieldKeyPath, value);
   };
 
   let ControlComp;
@@ -33,7 +42,7 @@ export default function FCheckbox (props) {
         control={(
           <ControlComp
             {...CheckboxProps}
-            checked={form.getFieldValue(fieldKeyPath, false)}
+            checked={value}
             onChange={handleChange}
             ref={form.registerField(fieldKeyPath, {
               validation: validation
@@ -52,6 +61,5 @@ FCheckbox.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
-  onValueChange: PropTypes.func,
   controlType: PropTypes.string
 };

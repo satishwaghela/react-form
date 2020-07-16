@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 export function handleChangeFlow (value, fieldKeyPath, onValueChange, validation, form) {
@@ -10,6 +10,19 @@ export function handleChangeFlow (value, fieldKeyPath, onValueChange, validation
     const validator = form.getValidator(fieldKeyPath, value);
     validator();
   }
+}
+
+export function useCall (callback, dependencies = []) {
+  const prevDependencies = useRef(dependencies);
+  useEffect(() => {
+    for (let i = 0; i < dependencies.length; i++) {
+      if (dependencies[i] !== prevDependencies.current[i]) {
+        callback();
+        prevDependencies.current = dependencies;
+        break;
+      }
+    }
+  });
 }
 
 export function getHelperText (fieldMetaData) {

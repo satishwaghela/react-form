@@ -4,21 +4,28 @@ import PropTypes from 'prop-types';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { handleChangeFlow, getHelperText } from './FieldUtils';
+import { getHelperText, useCall } from './FieldUtils';
 
 export default function FRadioGroup (props) {
   const {
-    FormControlLabelProps, RadioProps, form, fieldKeyPath, validation, onValueChange,
+    FormControlLabelProps, RadioProps, form, fieldKeyPath, validation,
     radioOptions
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
+  const value = form.getFieldValue(fieldKeyPath);
+
+  useCall(() => {
+    if (validation) {
+      const validator = form.getValidator(fieldKeyPath, value);
+      validator();
+    }
+  }, [value]);
+
   const handleChange = (event) => {
     const value = event.target.value;
-    handleChangeFlow(value, fieldKeyPath, onValueChange, validation, form);
+    form.setFieldValue(fieldKeyPath, value);
   };
-
-  const value = form.getFieldValue(fieldKeyPath);
 
   return (
     <>
@@ -47,6 +54,5 @@ FRadioGroup.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
-  onValueChange: PropTypes.func,
   radioOptions: PropTypes.array
 };

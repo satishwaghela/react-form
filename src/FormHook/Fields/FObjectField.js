@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getHelperText } from './FieldUtils';
+import { getHelperText, useCall } from './FieldUtils';
 
 export default function FObjectField (props) {
   const { form, fieldKeyPath, validation, Child, ChildProps = {} } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
+
+  const value = form.getFieldValue(fieldKeyPath);
+
+  useCall(() => {
+    if (validation) {
+      const validator = form.getValidator(fieldKeyPath, value);
+      validator();
+    }
+  }, [value]);
 
   const validateObject = () => {
     if (validation) {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, createRef } from 'react';
 import _ from 'lodash';
+import produce from 'immer';
 
 export default function useForm ({
   formData = {}, metaData = {},
@@ -29,9 +30,10 @@ export default function useForm ({
 
   const setFormState = (setCallback) => {
     setState((prevState) => {
-      const draftState = { ...prevState };
-      setCallback(draftState);
-      return draftState;
+      const newState = produce(prevState, (draftState) => {
+        setCallback(draftState);
+      });
+      return newState;
     });
   };
 
