@@ -17,12 +17,12 @@ export default function ObjectFieldExample (props) {
           callback();
         }
       }}
-      Child={ObjectChild}
+      Comp={ObjectComp}
     />
   );
 }
 
-function ObjectChild ({ validateObject, fieldKeyPath, form, helperText }) {
+function ObjectComp ({ validateObject, fieldKeyPath, form, helperText }) {
   const fieldKeyPathRole = fieldKeyPath + '.role';
   const fieldKeyPathUser = fieldKeyPath + '.user';
   const fieldKeyPathGroup = fieldKeyPath + '.group';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FObjectField (props) {
-  const { form, fieldKeyPath, validation, Child, ChildProps = {} } = props;
+  const { form, fieldKeyPath, validation, Comp, CompProps = {} } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const value = form.getFieldValue(fieldKeyPath);
@@ -19,8 +19,8 @@ export default function FObjectField (props) {
   }, [value]);
 
   return (
-    <Child
-      {...ChildProps}
+    <Comp
+      {...CompProps}
       form={form}
       fieldKeyPath={fieldKeyPath}
       ref={form.registerField(fieldKeyPath, {
@@ -32,8 +32,8 @@ export default function FObjectField (props) {
 }
 
 FObjectField.propTypes = {
-  Child: PropTypes.any,
-  ChildProps: PropTypes.object,
+  Comp: PropTypes.any,
+  CompProps: PropTypes.object,
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func
