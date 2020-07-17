@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getHelperText, useIsMount } from './FieldUtils';
+import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FRadioGroup (props) {
   const {
@@ -58,3 +58,12 @@ FRadioGroup.propTypes = {
   validation: PropTypes.func,
   radioOptions: PropTypes.array
 };
+
+export function MemoFRadioGroup (props) {
+  return (
+    <MemoField
+      Field={FRadioGroup}
+      props={props}
+    />
+  );
+}

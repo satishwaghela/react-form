@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import TextField from '@material-ui/core/TextField';
 
-import { getHelperText, useIsMount } from './FieldUtils';
+import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FTextField (props) {
   const { TextFieldProps, form, fieldKeyPath, validation } = props;
@@ -48,3 +48,12 @@ FTextField.propTypes = {
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func
 };
+
+export function MemoFTextField (props) {
+  return (
+    <MemoField
+      Field={FTextField}
+      props={props}
+    />
+  );
+}

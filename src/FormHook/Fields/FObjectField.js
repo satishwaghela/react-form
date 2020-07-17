@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { getHelperText, useIsMount } from './FieldUtils';
+import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FObjectField (props) {
   const { form, fieldKeyPath, validation, Comp, CompProps = {} } = props;
@@ -38,3 +38,12 @@ FObjectField.propTypes = {
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func
 };
+
+export function MemoFObjectField (props) {
+  return (
+    <MemoField
+      Field={FObjectField}
+      props={props}
+    />
+  );
+}

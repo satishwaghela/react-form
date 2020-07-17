@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import FTextField from '../FormHook/Fields/FTextField';
+import { MemoFTextField } from '../FormHook/Fields/FTextField';
 import { requiredValidation } from './validations';
 
 export default function AsyncValidationExample (props) {
@@ -8,7 +8,7 @@ export default function AsyncValidationExample (props) {
   const timeoutId = useRef(0);
 
   return (
-    <FTextField
+    <MemoFTextField
       form={form}
       fieldKeyPath='username'
       validation={(value, formState, callback) => {

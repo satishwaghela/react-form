@@ -5,7 +5,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getHelperText, useIsMount } from './FieldUtils';
+import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FCheckbox (props) {
   const {
@@ -65,3 +65,12 @@ FCheckbox.propTypes = {
   validation: PropTypes.func,
   controlType: PropTypes.string
 };
+
+export function MemoFCheckbox (props) {
+  return (
+    <MemoField
+      Field={FCheckbox}
+      props={props}
+    />
+  );
+}

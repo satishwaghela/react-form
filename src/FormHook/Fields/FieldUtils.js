@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 export function useIsMount () {
@@ -18,3 +18,18 @@ export function getHelperText (fieldMetaData) {
     return null;
   }
 }
+
+export function MemoField (memoProps) {
+  const { Field, props } = memoProps;
+  const { form, fieldKeyPath } = props;
+  const value = form.getFieldValue(fieldKeyPath);
+  const metaData = form.getFieldMetaData(fieldKeyPath);
+  return useMemo(() => {
+    return (
+      <Field
+        {...props}
+      />
+    );
+    // eslint-disable-next-line 
+  }, [fieldKeyPath, value, _.isEmpty(metaData) ? '' : metaData]);
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import FObjectField from '../FormHook/Fields/FObjectField';
-import FTextField from '../FormHook/Fields/FTextField';
+import { MemoFTextField } from '../FormHook/Fields/FTextField';
 
 export default function ObjectFieldExample (props) {
   const { form } = props;
@@ -29,7 +29,7 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
   return (
     <>
       <Grid item xs={4} ref={onRef}>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathRole}
           onValueChange={(value) => {
@@ -41,7 +41,7 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
         />
       </Grid>
       <Grid item xs={4}>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathUser}
           onValueChange={(value) => {
@@ -53,7 +53,7 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
         />
       </Grid>
       <Grid item xs={4}>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathGroup}
           onValueChange={(value) => {

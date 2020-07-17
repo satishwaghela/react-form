@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import useForm from '../FormHook';
-import FTextField from '../FormHook/Fields/FTextField';
-import FCheckbox from '../FormHook/Fields/FCheckbox';
-import FAutoComplete from '../FormHook/Fields/FAutoComplete';
-import FCheckboxGroup from '../FormHook/Fields/FCheckboxGroup';
-import FRadioGroup from '../FormHook/Fields/FRadioGroup';
+import { MemoFTextField } from '../FormHook/Fields/FTextField';
+import { MemoFCheckbox } from '../FormHook/Fields/FCheckbox';
+import { MemoFAutoComplete } from '../FormHook/Fields/FAutoComplete';
+import { MemoFCheckboxGroup } from '../FormHook/Fields/FCheckboxGroup';
+import { MemoFRadioGroup } from '../FormHook/Fields/FRadioGroup';
 import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
 import ArrayFieldExample from './ArrayFieldExample';
@@ -42,7 +42,7 @@ export default function Example () {
         <AsyncValidationExample form={form} />
       </Grid>
       <Grid item xs={6}>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath='profile.firstname'
           validation={(value, formState, callback) => {
@@ -55,7 +55,7 @@ export default function Example () {
         />
       </Grid>
       <Grid item xs={6}>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath='profile.lastname'
           validation={(value, formState, callback) => {
@@ -71,7 +71,7 @@ export default function Example () {
         <ObjectFieldExample form={form} />
       </Grid>
       <Grid item xs={9}>
-        <FAutoComplete
+        <MemoFAutoComplete
           form={form}
           fieldKeyPath='dummyname'
           valueKey='name'
@@ -86,7 +86,7 @@ export default function Example () {
         />
       </Grid>
       <Grid item xs={9}>
-        <FCheckboxGroup
+        <MemoFCheckboxGroup
           form={form}
           fieldKeyPath='assignResp'
           checkboxOptions={[{
@@ -106,7 +106,7 @@ export default function Example () {
         />
       </Grid>
       <Grid item xs={9}>
-        <FRadioGroup
+        <MemoFRadioGroup
           form={form}
           fieldKeyPath='gender'
           radioOptions={[{
@@ -126,7 +126,7 @@ export default function Example () {
         />
       </Grid>
       <ArrayFieldExample form={form} />
-      <FCheckbox
+      <MemoFCheckbox
         form={form}
         fieldKeyPath='ack'
         validation={(value, formState, callback) => {

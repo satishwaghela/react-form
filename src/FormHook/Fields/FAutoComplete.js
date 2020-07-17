@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getHelperText, useIsMount } from './FieldUtils';
+import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FAutoComplete (props) {
   const {
@@ -81,3 +81,12 @@ FAutoComplete.propTypes = {
   validation: PropTypes.func,
   valueKey: PropTypes.string
 };
+
+export function MemoFAutoComplete (props) {
+  return (
+    <MemoField
+      Field={FAutoComplete}
+      props={props}
+    />
+  );
+}

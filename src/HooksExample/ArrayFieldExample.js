@@ -1,7 +1,7 @@
 import React from 'react';
 import FArrayField from '../FormHook/Fields/FArrayField';
 import FObjectField from '../FormHook/Fields/FObjectField';
-import FTextField from '../FormHook/Fields/FTextField';
+import { MemoFTextField } from '../FormHook/Fields/FTextField';
 
 export default function ArrayFieldExample (props) {
   const { form } = props;
@@ -88,7 +88,7 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
   return (
     <tr ref={onRef}>
       <td>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathRole}
           TextFieldProps={{
@@ -97,7 +97,7 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
         />
       </td>
       <td>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathUser}
           TextFieldProps={{
@@ -106,7 +106,7 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
         />
       </td>
       <td>
-        <FTextField
+        <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathGroup}
           TextFieldProps={{
