@@ -22,13 +22,13 @@ export default function ObjectFieldExample (props) {
   );
 }
 
-function ObjectComp ({ validateObject, fieldKeyPath, form, helperText }) {
+function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) {
   const fieldKeyPathRole = fieldKeyPath + '.role';
   const fieldKeyPathUser = fieldKeyPath + '.user';
   const fieldKeyPathGroup = fieldKeyPath + '.group';
   return (
     <>
-      <Grid item xs={4}>
+      <Grid item xs={4} ref={onRef}>
         <FTextField
           form={form}
           fieldKeyPath={fieldKeyPathRole}

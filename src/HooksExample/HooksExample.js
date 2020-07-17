@@ -9,6 +9,7 @@ import FCheckboxGroup from '../FormHook/Fields/FCheckboxGroup';
 import FRadioGroup from '../FormHook/Fields/FRadioGroup';
 import AsyncValidationExample from './AsyncValidationExample';
 import ObjectFieldExample from './ObjectFieldExample';
+import ArrayFieldExample from './ArrayFieldExample';
 import { requiredValidation } from './validations';
 
 export default function Example () {
@@ -124,6 +125,7 @@ export default function Example () {
           }}
         />
       </Grid>
+      <ArrayFieldExample form={form} />
       <FCheckbox
         form={form}
         fieldKeyPath='ack'

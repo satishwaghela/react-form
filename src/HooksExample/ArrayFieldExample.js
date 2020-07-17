@@ -1,0 +1,118 @@
+import React from 'react';
+import FArrayField from '../FormHook/Fields/FArrayField';
+import FObjectField from '../FormHook/Fields/FObjectField';
+import FTextField from '../FormHook/Fields/FTextField';
+
+export default function ArrayFieldExample (props) {
+  const { form } = props;
+  return (
+    <FArrayField
+      form={form}
+      fieldKeyPath='access'
+      Comp={ArrayComp}
+      CompProps={{
+        form: form,
+        fieldKeyPath: 'access'
+      }}
+      ItemComp={ArrayItem}
+      ItemCompProps={{
+        form: form
+      }}
+    />
+  );
+}
+
+function ArrayComp ({ children, helperText, fieldKeyPath, form, onRef }) {
+
+  const handleAdd = (e) => {
+    form.arrayItemAdd(fieldKeyPath);
+  }
+
+  return (
+    <>
+      <table
+        ref={onRef}
+      >
+        <tbody>
+          {children.length ? children : (
+            <tr><td>Click on plus button to add</td></tr>
+          )}
+        </tbody>
+      </table>
+      {helperText}
+      <div>
+        <button onClick={handleAdd}>+</button>
+      </div>
+    </>
+  );
+}
+
+function ArrayItem (props) {
+  const { fieldKeyPath, form, onRef, arrayFieldKeyPath } = props;
+  return (
+    <FObjectField
+      form={form}
+      fieldKeyPath={fieldKeyPath}
+      ref={onRef}
+      validation={(value = {}, formState, callback) => {
+        if (!value.role && !value.user && !value.group) {
+          callback('Role/User/Group is required');
+        } else {
+          callback();
+        }
+      }}
+      Comp={ArrayItemComp}
+      CompProps={{
+        arrayFieldKeyPath: arrayFieldKeyPath
+      }}
+    />
+  );
+}
+
+function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onRef, index }) {
+  const fieldKeyPathRole = fieldKeyPath + '.role';
+  const fieldKeyPathUser = fieldKeyPath + '.user';
+  const fieldKeyPathGroup = fieldKeyPath + '.group';
+
+  const handleRemove = (e) => {
+    form.arrayItemRemove(arrayFieldKeyPath, index);
+  }
+
+  return (
+    <tr ref={onRef}>
+      <td>
+        <FTextField
+          form={form}
+          fieldKeyPath={fieldKeyPathRole}
+          TextFieldProps={{
+            label: 'Role'
+          }}
+        />
+      </td>
+      <td>
+        <FTextField
+          form={form}
+          fieldKeyPath={fieldKeyPathUser}
+          TextFieldProps={{
+            label: 'User'
+          }}
+        />
+      </td>
+      <td>
+        <FTextField
+          form={form}
+          fieldKeyPath={fieldKeyPathGroup}
+          TextFieldProps={{
+            label: 'Group'
+          }}
+        />
+      </td>
+      <td>
+        <button onClick={handleRemove}>-</button>
+      </td>
+      <td>
+        {helperText}
+      </td>
+    </tr>
+  );
+}
