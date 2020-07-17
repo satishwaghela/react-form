@@ -23,7 +23,7 @@ export default function FArrayField (props) {
       {...CompProps}
       form={form}
       fieldKeyPath={fieldKeyPath}
-      refForward={form.registerField(fieldKeyPath, {
+      onRef={form.registerField(fieldKeyPath, {
         validation: validation
       })}
       helperText={getHelperText(fieldMetaData)}

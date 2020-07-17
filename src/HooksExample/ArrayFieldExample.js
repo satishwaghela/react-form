@@ -9,6 +9,13 @@ export default function ArrayFieldExample (props) {
     <FArrayField
       form={form}
       fieldKeyPath='access'
+      validation={(value = {}, formState, callback) => {
+        if (!value || !value.length) {
+          callback('Required!');
+        } else {
+          callback();
+        }
+      }}
       Comp={ArrayComp}
       CompProps={{
         form: form,
