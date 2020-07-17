@@ -22,7 +22,7 @@ export default function ObjectFieldExample (props) {
   );
 }
 
-function ObjectChild ({ validateObject, fieldKeyPath, form }) {
+function ObjectChild ({ validateObject, fieldKeyPath, form, helperText }) {
   const fieldKeyPathRole = fieldKeyPath + '.role';
   const fieldKeyPathUser = fieldKeyPath + '.user';
   const fieldKeyPathGroup = fieldKeyPath + '.group';
@@ -64,6 +64,7 @@ function ObjectChild ({ validateObject, fieldKeyPath, form }) {
           }}
         />
       </Grid>
+      {helperText}
     </>
   );
 }

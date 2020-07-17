@@ -19,20 +19,15 @@ export default function FObjectField (props) {
   }, [value]);
 
   return (
-    <>
-      <Child
-        {...ChildProps}
-        form={form}
-        fieldKeyPath={fieldKeyPath}
-      />
-      <div
-        ref={form.registerField(fieldKeyPath, {
-          validation: validation
-        })}
-      >
-        {getHelperText(fieldMetaData)}
-      </div>
-    </>
+    <Child
+      {...ChildProps}
+      form={form}
+      fieldKeyPath={fieldKeyPath}
+      ref={form.registerField(fieldKeyPath, {
+        validation: validation
+      })}
+      helperText={getHelperText(fieldMetaData)}
+    />
   );
 }
 
