@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getHelperText, useCall } from './FieldUtils';
+import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FCheckboxGroup (props) {
   const {
@@ -16,23 +16,26 @@ export default function FCheckboxGroup (props) {
 
   const value = form.getFieldValue(fieldKeyPath, []);
 
-  useCall(() => {
-    if (validation) {
+  const isMount = useIsMount();
+  useEffect(() => {
+    if (validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value.length]);
 
   const handleChange = (event) => {
+    const newValue = [...value];
     const checked = event.target.checked;
     const name = event.target.name;
     if (checked) {
-      value.push(name);
+      newValue.push(name);
     } else {
       const index = value.indexOf(name);
-      value.splice(index, 1);
+      newValue.splice(index, 1);
     }
-    form.setFieldValue(fieldKeyPath, value);
+    form.setFieldValue(fieldKeyPath, newValue);
   };
 
   let ControlComp;

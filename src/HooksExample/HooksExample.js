@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import useForm from '../FormHook';
@@ -15,17 +15,20 @@ export default function Example () {
   const submitBtnRef = React.createRef();
 
   const form = useForm({
-    formData: {},
-    onFormChange: () => {
-      const validity = form.getFormValidity();
-      console.log(validity);
+    formData: {}
+  });
+
+  const { formState } = form;
+  useEffect(() => {
+    form.getFormValidity((validity) => {
       if (validity.valid) {
         submitBtnRef.current.classList.remove('disable');
       } else {
         submitBtnRef.current.classList.add('disable');
       }
-    }
-  });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formState]);
 
   const buttonProps = {};
   if (!submitBtnRef.current) {
@@ -139,13 +142,14 @@ export default function Example () {
           variant='contained' color='primary'
           onClick={() => {
             console.log('form submit');
-            const validity = form.getFormValidity();
-            if (validity.valid) {
-              console.log(form.formState.formData);
-            } else {
-              console.log(validity);
-              form.validateForm();
-            }
+            form.getFormValidity((validity) => {
+              if (validity.valid) {
+                console.log(form.formState.formData);
+              } else {
+                console.log(validity);
+                form.validateForm();
+              }
+            });
           }}
         >
           Submit

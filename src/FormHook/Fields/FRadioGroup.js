@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getHelperText, useCall } from './FieldUtils';
+import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FRadioGroup (props) {
   const {
@@ -15,11 +15,13 @@ export default function FRadioGroup (props) {
 
   const value = form.getFieldValue(fieldKeyPath);
 
-  useCall(() => {
-    if (validation) {
+  const isMount = useIsMount();
+  useEffect(() => {
+    if (validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleChange = (event) => {

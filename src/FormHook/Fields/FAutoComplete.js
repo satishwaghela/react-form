@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getHelperText, useCall } from './FieldUtils';
+import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FAutoComplete (props) {
   const {
@@ -34,11 +34,13 @@ export default function FAutoComplete (props) {
 
   const value = form.getFieldValue(fieldKeyPath, emptyValue);
 
-  useCall(() => {
-    if (validation) {
+  const isMount = useIsMount();
+  useEffect(() => {
+    if (validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value.length]);
 
   let selected;

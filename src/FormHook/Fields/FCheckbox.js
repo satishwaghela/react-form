@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { getHelperText, useCall } from './FieldUtils';
+import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FCheckbox (props) {
   const {
@@ -16,11 +16,13 @@ export default function FCheckbox (props) {
 
   const value = form.getFieldValue(fieldKeyPath, false);
 
-  useCall(() => {
-    if (validation) {
+  const isMount = useIsMount();
+  useEffect(() => {
+    if (validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleChange = (event) => {

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+
 import TextField from '@material-ui/core/TextField';
-import { getHelperText, useCall } from './FieldUtils';
+
+import { getHelperText, useIsMount } from './FieldUtils';
 
 export default function FTextField (props) {
   const { TextFieldProps, form, fieldKeyPath, validation } = props;
@@ -9,11 +11,13 @@ export default function FTextField (props) {
 
   const value = form.getFieldValue(fieldKeyPath, '');
 
-  useCall(() => {
-    if (validation) {
+  const isMount = useIsMount();
+  useEffect(() => {
+    if (validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleChange = (event) => {

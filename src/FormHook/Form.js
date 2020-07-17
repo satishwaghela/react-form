@@ -1,23 +1,14 @@
-import { useState, useEffect, useRef, createRef } from 'react';
+import { useState, useRef, createRef } from 'react';
 import _ from 'lodash';
 import produce from 'immer';
 
 export default function useForm ({
-  formData = {}, metaData = {},
-  onFormChange
+  formData = {}, metaData = {}
 }) {
   const [state, setState] = useState({
     formData, metaData
   });
   const fields = useRef({});
-  const hasFormChanged = useRef(false);
-
-  useEffect(() => {
-    if (hasFormChanged.current && onFormChange) {
-      onFormChange();
-      hasFormChanged.current = false;
-    }
-  });
 
   const registerField = (fieldKeyPath, options = {}) => {
     const ref = createRef();
@@ -37,25 +28,17 @@ export default function useForm ({
     });
   };
 
-  const getLatestFormState = (callback) => {
-    setState((prevState) => {
-      callback(prevState);
-      return prevState;
-    });
-  };
-
   const getFieldMetaDataPath = (fieldKeyPath) => {
     return fieldKeyPath.split('.').join('.children.');
   };
 
-  const getFieldMetaData = (fieldKeyPath, _formState) => {
-    const formState = _formState || state;
+  const getFieldMetaData = (fieldKeyPath, latestState) => {
+    const formState = latestState || state;
     return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}`, {});
   };
 
-  const getFieldValue = (fieldKeyPath, defaultValue, _formState) => {
-    const formState = _formState || state;
-    return _.get(formState.formData, fieldKeyPath, defaultValue);
+  const getFieldValue = (fieldKeyPath, defaultValue) => {
+    return _.get(state.formData, fieldKeyPath, defaultValue);
   };
 
   const setFieldValue = (fieldKeyPath, value) => {
@@ -64,12 +47,10 @@ export default function useForm ({
     });
     setFieldTouched(fieldKeyPath);
     setFieldValidationDone(fieldKeyPath, false);
-    hasFormChanged.current = true;
   };
 
-  const getFieldTouched = (fieldKeyPath, _formState) => {
-    const formState = _formState || state;
-    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, false);
+  const getFieldTouched = (fieldKeyPath) => {
+    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, false);
   };
 
   const setFieldTouched = (fieldKeyPath) => {
@@ -78,9 +59,8 @@ export default function useForm ({
     });
   };
 
-  const getFieldValidationDone = (fieldKeyPath, _formState) => {
-    const formState = _formState || state;
-    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
+  const getFieldValidationDone = (fieldKeyPath) => {
+    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
   };
 
   const setFieldValidationDone = (fieldKeyPath, value) => {
@@ -89,9 +69,8 @@ export default function useForm ({
     });
   };
 
-  const getFieldError = (fieldKeyPath, _formState) => {
-    const formState = _formState || state;
-    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`);
+  const getFieldError = (fieldKeyPath) => {
+    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`);
   };
 
   const setFieldError = (fieldKeyPath, errorMsg) => {
@@ -100,9 +79,8 @@ export default function useForm ({
     });
   };
 
-  const getFieldValidating = (fieldKeyPath, _formState) => {
-    const formState = _formState || state;
-    return _.get(formState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, false);
+  const getFieldValidating = (fieldKeyPath) => {
+    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, false);
   };
 
   const setFieldValidating = (fieldKeyPath, value) => {
@@ -123,7 +101,6 @@ export default function useForm ({
     setFieldError(fieldKeyPath, error);
     setFieldValidating(fieldKeyPath, false);
     setFieldValidationDone(fieldKeyPath, true);
-    hasFormChanged.current = true;
   };
 
   const getValidator = (fieldKeyPath, value) => {
@@ -138,10 +115,8 @@ export default function useForm ({
 
   const runValidation = (validation, value, fieldKeyPath) => {
     updatePreValidationMetaData(fieldKeyPath);
-    getLatestFormState((draftState) => {
-      validation(value, draftState, (error) => {
-        updatePostValidationMetaData(fieldKeyPath, error);
-      });
+    validation(value, state, (error) => {
+      updatePostValidationMetaData(fieldKeyPath, error);
     });
   };
 
@@ -162,40 +137,43 @@ export default function useForm ({
     });
   };
 
-  const getFormValidity = () => {
-    const validity = {
-      valid: false,
-      validFields: [],
-      invalidFields: [],
-      validatingFields: []
-    };
-    _.each(fields.current, (field, fieldKeyPath) => {
-      if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
-        return;
-      }
-      const fieldError = getFieldError(fieldKeyPath);
-      const isFieldValidating = getFieldValidating(fieldKeyPath);
-      const isFieldValidationDone = getFieldValidationDone(fieldKeyPath);
-      if (isFieldValidating) {
-        validity.validatingFields.push(fieldKeyPath);
-      } else if (fieldError) {
-        validity.invalidFields.push(fieldKeyPath);
-      } else if (!isFieldValidationDone) {
-        validity.validatingFields.push(fieldKeyPath);
-        const value = getFieldValue(fieldKeyPath);
-        field.validation(value, state, (error) => {
-          const index = validity.validatingFields.indexOf(fieldKeyPath);
-          validity.validatingFields.splice(index, 1);
-          if (error) {
-            validity.invalidFields.push(fieldKeyPath);
-          }
-        });
-      } else {
-        validity.validFields.push(fieldKeyPath);
-      }
-    });
-    validity.valid = !validity.invalidFields.length && !validity.validatingFields.length;
-    return validity;
+  const getFormValidity = (callback) => {
+    setFormState((drafState) => {
+      const validity = {
+        valid: false,
+        validFields: [],
+        invalidFields: [],
+        validatingFields: []
+      };
+      _.each(fields.current, (field, fieldKeyPath) => {
+        if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
+          return;
+        }
+        const fieldMetaData = getFieldMetaData(fieldKeyPath, drafState);
+        const fieldError = fieldMetaData.error;
+        const isFieldValidating = fieldMetaData.validating;
+        const isFieldValidationDone = fieldMetaData.validationDone;
+        if (isFieldValidating) {
+          validity.validatingFields.push(fieldKeyPath);
+        } else if (fieldError) {
+          validity.invalidFields.push(fieldKeyPath);
+        } else if (!isFieldValidationDone) {
+          validity.validatingFields.push(fieldKeyPath);
+          const value = getFieldValue(fieldKeyPath);
+          field.validation(value, state, (error) => {
+            const index = validity.validatingFields.indexOf(fieldKeyPath);
+            validity.validatingFields.splice(index, 1);
+            if (error) {
+              validity.invalidFields.push(fieldKeyPath);
+            }
+          });
+        } else {
+          validity.validFields.push(fieldKeyPath);
+        }
+      });
+      validity.valid = !validity.invalidFields.length && !validity.validatingFields.length;
+      callback(validity);
+    })
   };
 
   return {
@@ -203,7 +181,6 @@ export default function useForm ({
     fields,
     registerField,
     setFormState,
-    getLatestFormState,
     getFieldMetaData,
     getFieldValue,
     setFieldValue,
