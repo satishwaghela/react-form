@@ -9,7 +9,7 @@ import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 export default function FRadioGroup (props) {
   const {
     FormControlLabelProps, RadioProps, form, fieldKeyPath, validation,
-    radioOptions
+    radioOptions, validateOnChange = true
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
@@ -17,7 +17,7 @@ export default function FRadioGroup (props) {
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validation && !isMount) {
+    if (validateOnChange && validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
@@ -56,6 +56,7 @@ FRadioGroup.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
+  validateOnChange: PropTypes.bool,
   radioOptions: PropTypes.array
 };
 

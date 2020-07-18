@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FObjectField (props) {
-  const { form, fieldKeyPath, validation, Comp, CompProps = {} } = props;
+  const { form, fieldKeyPath, validation, Comp, CompProps = {}, validateOnChange = true } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const value = form.getFieldValue(fieldKeyPath);
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validation && !isMount) {
+    if (validateOnChange && validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
@@ -36,6 +36,7 @@ FObjectField.propTypes = {
   CompProps: PropTypes.object,
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
+  validateOnChange: PropTypes.bool,
   validation: PropTypes.func
 };
 

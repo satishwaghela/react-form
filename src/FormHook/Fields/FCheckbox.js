@@ -10,7 +10,7 @@ import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 export default function FCheckbox (props) {
   const {
     FormControlLabelProps, CheckboxProps, form, fieldKeyPath, validation,
-    controlType = 'checkbox'
+    controlType = 'checkbox', validateOnChange = true
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
@@ -18,7 +18,7 @@ export default function FCheckbox (props) {
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validation && !isMount) {
+    if (validateOnChange && validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
@@ -63,6 +63,7 @@ FCheckbox.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
+  validateOnChange: PropTypes.bool,
   controlType: PropTypes.string
 };
 

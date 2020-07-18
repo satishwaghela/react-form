@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FArrayField (props) {
-  const { form, fieldKeyPath, validation, Comp, CompProps = {}, ItemComp, ItemCompProps = {} } = props;
+  const { form, fieldKeyPath, validation, Comp, CompProps = {}, ItemComp, ItemCompProps = {}, validateOnChange = true } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const value = form.getFieldValue(fieldKeyPath);
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validation && !isMount) {
+    if (validateOnChange && validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
@@ -57,6 +57,7 @@ FArrayField.propTypes = {
   ItemCompProps: PropTypes.object,
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
+  validateOnChange: PropTypes.bool,
   validation: PropTypes.func
 };
 

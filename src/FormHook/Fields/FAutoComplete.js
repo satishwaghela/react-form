@@ -9,7 +9,7 @@ export default function FAutoComplete (props) {
   const {
     AutocompleteProps = {}, TextFieldProps = {},
     form, fieldKeyPath, validation,
-    valueKey = 'value'
+    valueKey = 'value', validateOnChange = true
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
@@ -36,7 +36,7 @@ export default function FAutoComplete (props) {
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validation && !isMount) {
+    if (validateOnChange && validation && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
       validator();
     }
@@ -79,6 +79,7 @@ FAutoComplete.propTypes = {
   form: PropTypes.object,
   fieldKeyPath: PropTypes.string,
   validation: PropTypes.func,
+  validateOnChange: PropTypes.bool,
   valueKey: PropTypes.string
 };
 
