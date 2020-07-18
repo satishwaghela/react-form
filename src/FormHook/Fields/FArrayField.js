@@ -20,6 +20,7 @@ export default function FArrayField (props) {
 
   useEffect(() => {
     form.setArrayItemUniqeKeyMeta(fieldKeyPath);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
   return (

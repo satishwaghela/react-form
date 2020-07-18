@@ -6,10 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import { getHelperText, useIsMount, MemoField } from './FieldUtils';
 
 export default function FTextField (props) {
-  const { TextFieldProps, form, fieldKeyPath, validation } = props;
+  const { TextFieldProps, form, fieldKeyPath, validation, valueChange = 'onChange' } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
-  const value = form.getFieldValue(fieldKeyPath, '');
+  const value = form.getFieldValue(fieldKeyPath);
 
   const isMount = useIsMount();
   useEffect(() => {
@@ -25,14 +25,21 @@ export default function FTextField (props) {
     form.setFieldValue(fieldKeyPath, value);
   };
 
+  const changeHandleProps = {};
+  if (valueChange === 'onBlur') {
+    changeHandleProps.onBlur = handleChange;
+  } else {
+    changeHandleProps.onChange = handleChange;
+  }
+
   return (
     <>
       <TextField
         error={!fieldMetaData.validating && !!fieldMetaData.error}
         fullWidth
+        {...changeHandleProps}
         {...TextFieldProps}
-        value={value}
-        onChange={handleChange}
+        defaultValue={value || ''}
         ref={form.registerField(fieldKeyPath, {
           validation: validation
         })}
