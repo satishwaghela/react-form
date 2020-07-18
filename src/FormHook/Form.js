@@ -48,6 +48,21 @@ export default function useForm ({
     setFieldValidationDone(fieldKeyPath, false);
   };
 
+  const setArrayItemUniqeKeyMeta = (fieldKeyPath) => {
+    setFormState((draftState) => {
+      const arrayValue = _.get(draftState.formData, fieldKeyPath);
+      const arrayMetaData = _.get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+      const metaItems = arrayMetaData.children || [];
+      _.each(arrayValue, (value, index) => {
+        const itemMeta = metaItems[index];
+        if (!itemMeta || !itemMeta.ukey) {
+          const ukey = '_' + Math.random().toString(36).substr(2, 9);
+          _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath + '.' + index)}.ukey`, ukey);
+        }
+      });
+    });
+  }
+
   const arrayItemAdd = (fieldKeyPath, value) => {
     setFormState((draftState) => {
       let arrayValue = _.get(draftState.formData, fieldKeyPath);
@@ -57,8 +72,6 @@ export default function useForm ({
         arrayValue = [value];
         _.set(draftState.formData, fieldKeyPath, arrayValue);
       }
-      const uid = '_' + Math.random().toString(36).substr(2, 9);
-      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath + '.' + (arrayValue.length - 1))}.uid`, uid);
     });
   };
 
@@ -209,6 +222,7 @@ export default function useForm ({
     getFieldMetaData,
     getFieldValue,
     setFieldValue,
+    setArrayItemUniqeKeyMeta,
     arrayItemAdd,
     arrayItemRemove,
     getFieldTouched,

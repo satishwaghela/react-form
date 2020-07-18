@@ -18,6 +18,10 @@ export default function FArrayField (props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  useEffect(() => {
+    form.setArrayItemUniqeKeyMeta(fieldKeyPath);
+  }, [value])
+
   return (
     <Comp
       {...CompProps}
@@ -33,7 +37,7 @@ export default function FArrayField (props) {
         const metaData = form.getFieldMetaData(itemFieldKeyPath);
         return (
           <ItemComp
-            key={metaData.uid}
+            key={metaData.ukey || i}
             {...ItemCompProps}
             fieldKeyPath={itemFieldKeyPath}
             arrayFieldKeyPath={fieldKeyPath}
