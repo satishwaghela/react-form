@@ -55,7 +55,7 @@ function ArrayComp ({ children, helperText, fieldKeyPath, form, onRef }) {
 }
 
 function ArrayItem (props) {
-  const { fieldKeyPath, form, onRef, arrayFieldKeyPath } = props;
+  const { fieldKeyPath, form, onRef, arrayFieldKeyPath, index } = props;
   return (
     <FObjectField
       form={form}
@@ -70,7 +70,8 @@ function ArrayItem (props) {
       }}
       Comp={ArrayItemComp}
       CompProps={{
-        arrayFieldKeyPath: arrayFieldKeyPath
+        arrayFieldKeyPath: arrayFieldKeyPath,
+        index: index
       }}
     />
   );
