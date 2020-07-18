@@ -44,7 +44,6 @@ export default function useForm ({
     setFormState((draftState) => {
       _.set(draftState.formData, fieldKeyPath, value);
     });
-    setFieldTouched(fieldKeyPath);
     setFieldValidationDone(fieldKeyPath, false);
   };
 
@@ -86,16 +85,6 @@ export default function useForm ({
       }
     });
   }
-
-  const getFieldTouched = (fieldKeyPath) => {
-    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, false);
-  };
-
-  const setFieldTouched = (fieldKeyPath) => {
-    setFormState((draftState) => {
-      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.isTouched`, true);
-    });
-  };
 
   const getFieldValidationDone = (fieldKeyPath) => {
     return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
@@ -163,11 +152,9 @@ export default function useForm ({
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
-      const isFieldTouched = getFieldTouched(fieldKeyPath);
-      const fieldError = getFieldError(fieldKeyPath);
       const isFieldValidating = getFieldValidating(fieldKeyPath);
       const isFieldValidationDone = getFieldValidationDone(fieldKeyPath);
-      if (!isFieldTouched && !fieldError && !isFieldValidating && !isFieldValidationDone) {
+      if (!isFieldValidating && !isFieldValidationDone) {
         const value = getFieldValue(fieldKeyPath);
         const validator = getValidator(fieldKeyPath, value);
         validator();
@@ -197,12 +184,14 @@ export default function useForm ({
           validity.invalidFields.push(fieldKeyPath);
         } else if (!isFieldValidationDone) {
           validity.validatingFields.push(fieldKeyPath);
-          const value = _.get(draftState.formData, getFieldMetaDataPath(fieldKeyPath));
+          const value = _.get(draftState.formData, fieldKeyPath);
           field.validation(value, state, (error) => {
             const index = validity.validatingFields.indexOf(fieldKeyPath);
             validity.validatingFields.splice(index, 1);
             if (error) {
               validity.invalidFields.push(fieldKeyPath);
+            } else {
+              validity.validFields.push(fieldKeyPath);
             }
           });
         } else {
@@ -225,8 +214,6 @@ export default function useForm ({
     setArrayItemUniqeKeyMeta,
     arrayItemAdd,
     arrayItemRemove,
-    getFieldTouched,
-    setFieldTouched,
     getFieldError,
     setFieldError,
     getFieldValidation,
