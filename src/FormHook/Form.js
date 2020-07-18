@@ -5,6 +5,8 @@ import produce from 'immer';
 export default function useForm ({
   formData = {}, metaData = {}
 }) {
+  const form = useRef({});
+
   const [state, setState] = useState({
     formData, metaData
   });
@@ -34,6 +36,12 @@ export default function useForm ({
 
   const getFieldMetaData = (fieldKeyPath) => {
     return _.get(state.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+  };
+
+  const clearFieldMetaData = (fieldKeyPath) => {
+    setFormState((draftState) => {
+      _.set(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+    });
   };
 
   const getFieldValue = (fieldKeyPath, defaultValue) => {
@@ -203,27 +211,27 @@ export default function useForm ({
     })
   };
 
-  return {
-    formState: state,
-    fields,
-    registerField,
-    setFormState,
-    getFieldMetaData,
-    getFieldValue,
-    setFieldValue,
-    setArrayItemUniqeKeyMeta,
-    arrayItemAdd,
-    arrayItemRemove,
-    getFieldError,
-    setFieldError,
-    getFieldValidation,
-    updatePreValidationMetaData,
-    updatePostValidationMetaData,
-    getValidator,
-    runValidation,
-    getFieldValidating,
-    setFieldValidating,
-    getFormValidity,
-    validateForm
-  };
+  form.current.formState = state;
+  form.current.setFormState = setFormState;
+  form.current.fields = fields;
+  form.current.registerField = registerField;
+  form.current.getFieldMetaData = getFieldMetaData;
+  form.current.clearFieldMetaData = clearFieldMetaData;
+  form.current.getFieldValue = getFieldValue;
+  form.current.setFieldValue = setFieldValue;
+  form.current.setArrayItemUniqeKeyMeta = setArrayItemUniqeKeyMeta;
+  form.current.arrayItemAdd = arrayItemAdd;
+  form.current.arrayItemRemove = arrayItemRemove;
+  form.current.getFieldError = getFieldError;
+  form.current.setFieldError = setFieldError;
+  form.current.getFieldValidation = getFieldValidation;
+  form.current.updatePreValidationMetaData = updatePreValidationMetaData;
+  form.current.updatePostValidationMetaData = updatePostValidationMetaData;
+  form.current.getValidator = getValidator;
+  form.current.runValidation = runValidation;
+  form.current.getFieldValidating = getFieldValidating;
+  form.current.setFieldValidating = setFieldValidating;
+  form.current.getFormValidity = getFormValidity;
+  form.current.validateForm = validateForm;
+  return form.current;
 }
