@@ -141,7 +141,7 @@ export default function useForm ({
   const getValidator = (fieldKeyPath, value) => {
     const validation = getFieldValidation(fieldKeyPath);
     if (!validation) {
-      return () => { console.info(`No validation defined for field ${fieldKeyPath}`); };
+      return;
     }
     return () => {
       runValidation(validation, value, fieldKeyPath);

@@ -13,9 +13,9 @@ export default function FTextField (props) {
 
   const isMount = useIsMount();
   useEffect(() => {
-    if (validateOnChange && validation && !isMount) {
+    if (validateOnChange && !isMount) {
       const validator = form.getValidator(fieldKeyPath, value);
-      validator();
+      validator && validator();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
