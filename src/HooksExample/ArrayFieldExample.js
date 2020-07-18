@@ -86,6 +86,14 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
     form.arrayItemRemove(arrayFieldKeyPath, index);
   }
 
+  const handleShiftUp = (e) => {
+    form.arrayItemShift(arrayFieldKeyPath, index, index - 1);
+  }
+
+  const handleShiftDown = (e) => {
+    form.arrayItemShift(arrayFieldKeyPath, index, index + 1);
+  }
+
   return (
     <tr ref={onRef}>
       <td>
@@ -117,6 +125,12 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
       </td>
       <td>
         <button onClick={handleRemove}>-</button>
+      </td>
+      <td>
+        <button onClick={handleShiftUp}>Up</button>
+      </td>
+      <td>
+        <button onClick={handleShiftDown}>Down</button>
       </td>
       <td>
         {helperText}

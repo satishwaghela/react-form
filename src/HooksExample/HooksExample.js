@@ -45,10 +45,10 @@ export default function Example () {
         <MemoFTextField
           form={form}
           fieldKeyPath='profile.firstname'
-          /* validation={(value, formState, callback) => {
+          validation={(value, formState, callback) => {
             const errorMsg = requiredValidation(value);
             callback(errorMsg);
-          }} */
+          }}
           TextFieldProps={{
             label: 'First Name'
           }}

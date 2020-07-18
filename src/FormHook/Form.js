@@ -94,6 +94,20 @@ export default function useForm ({
     });
   }
 
+  const arrayItemShift = (fieldKeyPath, index, shiftToIndex) => {
+    setFormState((draftState) => {
+      const arrayValue = _.get(draftState.formData, fieldKeyPath);
+      const value = arrayValue.splice(index, 1)[0];
+      arrayValue.splice(shiftToIndex, 0, value);
+
+      const metaData = _.get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath));
+      if (metaData && metaData.children) {
+        const itemMetaData = metaData.children.splice(index, 1)[0];
+        metaData.children.splice(shiftToIndex, 0, itemMetaData);
+      }
+    });
+  }
+
   const getFieldValidationDone = (fieldKeyPath) => {
     return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
   };
@@ -222,6 +236,7 @@ export default function useForm ({
   form.current.setArrayItemUniqeKeyMeta = setArrayItemUniqeKeyMeta;
   form.current.arrayItemAdd = arrayItemAdd;
   form.current.arrayItemRemove = arrayItemRemove;
+  form.current.arrayItemShift = arrayItemShift;
   form.current.getFieldError = getFieldError;
   form.current.setFieldError = setFieldError;
   form.current.getFieldValidation = getFieldValidation;
