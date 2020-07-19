@@ -1,5 +1,7 @@
 import { useState, useRef, createRef } from 'react';
-import _ from 'lodash';
+import _get from 'lodash/get';
+import _set from 'lodash/set';
+import _each from 'lodash/each';
 import produce from 'immer';
 
 export default function useForm ({
@@ -35,36 +37,51 @@ export default function useForm ({
   };
 
   const getFieldMetaData = (fieldKeyPath) => {
-    return _.get(state.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+    return _get(state.metaData, getFieldMetaDataPath(fieldKeyPath), {});
   };
 
   const clearFieldMetaData = (fieldKeyPath) => {
     setFormState((draftState) => {
-      _.set(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+      _set(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+    });
+  };
+
+  const deleteFieldProperty = (fieldKeyPath) => {
+    setFormState((draftState) => {
+      const splitPath = fieldKeyPath.split('.');
+      const objectPath = splitPath.slice(0, -1).join('.');
+      const fieldKey = splitPath.slice(-1)[0];
+      let object;
+      if (objectPath) {
+        object = _get(draftState.formData, objectPath, {});
+      } else {
+        object = draftState.formData;
+      }
+      delete object[fieldKey];
     });
   };
 
   const getFieldValue = (fieldKeyPath, defaultValue) => {
-    return _.get(state.formData, fieldKeyPath, defaultValue);
+    return _get(state.formData, fieldKeyPath, defaultValue);
   };
 
   const setFieldValue = (fieldKeyPath, value) => {
     setFormState((draftState) => {
-      _.set(draftState.formData, fieldKeyPath, value);
+      _set(draftState.formData, fieldKeyPath, value);
     });
     setFieldValidationDone(fieldKeyPath, false);
   };
 
   const setArrayItemUniqeKeyMeta = (fieldKeyPath) => {
     setFormState((draftState) => {
-      const arrayValue = _.get(draftState.formData, fieldKeyPath);
-      const arrayMetaData = _.get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
+      const arrayValue = _get(draftState.formData, fieldKeyPath);
+      const arrayMetaData = _get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath), {});
       const metaItems = arrayMetaData.children || [];
-      _.each(arrayValue, (value, index) => {
+      _each(arrayValue, (value, index) => {
         const itemMeta = metaItems[index];
         if (!itemMeta || !itemMeta.ukey) {
           const ukey = '_' + Math.random().toString(36).substr(2, 9);
-          _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath + '.' + index)}.ukey`, ukey);
+          _set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath + '.' + index)}.ukey`, ukey);
         }
       });
     });
@@ -72,22 +89,22 @@ export default function useForm ({
 
   const arrayItemAdd = (fieldKeyPath, value) => {
     setFormState((draftState) => {
-      let arrayValue = _.get(draftState.formData, fieldKeyPath);
+      let arrayValue = _get(draftState.formData, fieldKeyPath);
       if (arrayValue) {
         arrayValue.push(value);
       } else {
         arrayValue = [value];
-        _.set(draftState.formData, fieldKeyPath, arrayValue);
+        _set(draftState.formData, fieldKeyPath, arrayValue);
       }
     });
   };
 
   const arrayItemRemove = (fieldKeyPath, index) => {
     setFormState((draftState) => {
-      const arrayValue = _.get(draftState.formData, fieldKeyPath);
+      const arrayValue = _get(draftState.formData, fieldKeyPath);
       arrayValue.splice(index, 1);
 
-      const metaData = _.get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath));
+      const metaData = _get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath));
       if (metaData && metaData.children) {
         metaData.children.splice(index, 1);
       }
@@ -96,11 +113,11 @@ export default function useForm ({
 
   const arrayItemShift = (fieldKeyPath, index, shiftToIndex) => {
     setFormState((draftState) => {
-      const arrayValue = _.get(draftState.formData, fieldKeyPath);
+      const arrayValue = _get(draftState.formData, fieldKeyPath);
       const value = arrayValue.splice(index, 1)[0];
       arrayValue.splice(shiftToIndex, 0, value);
 
-      const metaData = _.get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath));
+      const metaData = _get(draftState.metaData, getFieldMetaDataPath(fieldKeyPath));
       if (metaData && metaData.children) {
         const itemMetaData = metaData.children.splice(index, 1)[0];
         metaData.children.splice(shiftToIndex, 0, itemMetaData);
@@ -109,32 +126,32 @@ export default function useForm ({
   }
 
   const getFieldValidationDone = (fieldKeyPath) => {
-    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
+    return _get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
   };
 
   const setFieldValidationDone = (fieldKeyPath, value) => {
     setFormState((draftState) => {
-      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
+      _set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`, value);
     });
   };
 
   const getFieldError = (fieldKeyPath) => {
-    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`);
+    return _get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`);
   };
 
   const setFieldError = (fieldKeyPath, errorMsg) => {
     setFormState((draftState) => {
-      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`, errorMsg);
+      _set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.error`, errorMsg);
     });
   };
 
   const getFieldValidating = (fieldKeyPath) => {
-    return _.get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, false);
+    return _get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, false);
   };
 
   const setFieldValidating = (fieldKeyPath, value) => {
     setFormState((draftState) => {
-      _.set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
+      _set(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validating`, value);
     });
   };
 
@@ -170,7 +187,7 @@ export default function useForm ({
   };
 
   const validateForm = () => {
-    _.each(fields.current, (field, fieldKeyPath) => {
+    _each(fields.current, (field, fieldKeyPath) => {
       if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
         return;
       }
@@ -192,11 +209,11 @@ export default function useForm ({
         invalidFields: [],
         validatingFields: []
       };
-      _.each(fields.current, (field, fieldKeyPath) => {
+      _each(fields.current, (field, fieldKeyPath) => {
         if (!field.fieldRef || !field.fieldRef.current || !field.validation) {
           return;
         }
-        const fieldMetaData = _.get(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}`, {});
+        const fieldMetaData = _get(draftState.metaData, `${getFieldMetaDataPath(fieldKeyPath)}`, {});
         const fieldError = fieldMetaData.error;
         const isFieldValidating = fieldMetaData.validating;
         const isFieldValidationDone = fieldMetaData.validationDone;
@@ -206,7 +223,7 @@ export default function useForm ({
           validity.invalidFields.push(fieldKeyPath);
         } else if (!isFieldValidationDone) {
           validity.validatingFields.push(fieldKeyPath);
-          const value = _.get(draftState.formData, fieldKeyPath);
+          const value = _get(draftState.formData, fieldKeyPath);
           field.validation(value, state, (error) => {
             const index = validity.validatingFields.indexOf(fieldKeyPath);
             validity.validatingFields.splice(index, 1);
@@ -231,6 +248,7 @@ export default function useForm ({
   form.current.registerField = registerField;
   form.current.getFieldMetaData = getFieldMetaData;
   form.current.clearFieldMetaData = clearFieldMetaData;
+  form.current.deleteFieldProperty = deleteFieldProperty;
   form.current.getFieldValue = getFieldValue;
   form.current.setFieldValue = setFieldValue;
   form.current.setArrayItemUniqeKeyMeta = setArrayItemUniqeKeyMeta;
