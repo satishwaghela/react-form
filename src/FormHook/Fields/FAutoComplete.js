@@ -9,30 +9,13 @@ export default function FAutoComplete (props) {
   const {
     AutocompleteProps = {}, TextFieldProps = {},
     form, fieldKeyPath, validation,
-    valueKey = 'value', validateOnChange = true
+    valueKey, validateOnChange = true
   } = props;
   const fieldMetaData = form.getFieldMetaData(fieldKeyPath);
 
   const { multiple, options } = AutocompleteProps;
 
-  const handleChange = (event, selected) => {
-    let value;
-    if (multiple) {
-      value = selected.map(option => _.get(option, valueKey));
-    } else {
-      value = _.get(selected, valueKey);
-    }
-    form.setFieldValue(fieldKeyPath, value);
-  };
-
-  let emptyValue;
-  if (multiple) {
-    emptyValue = [];
-  } else {
-    emptyValue = '';
-  }
-
-  const value = form.getFieldValue(fieldKeyPath, emptyValue);
+  const value = form.getFieldValue(fieldKeyPath);
 
   const isMount = useIsMount();
   useEffect(() => {
@@ -41,19 +24,44 @@ export default function FAutoComplete (props) {
       validator && validator();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value.length]);
+  }, [value]);
+
+  const handleChange = (event, selected) => {
+    let value;
+    if (valueKey) {
+      if (multiple) {
+        value = selected.map(option => _.get(option, valueKey));
+      } else {
+        value = _.get(selected, valueKey);
+      }
+    } else {
+      value = selected;
+    }
+    form.setFieldValue(fieldKeyPath, value);
+  };
 
   let selected;
-  if (multiple) {
-    selected = options.filter(option => {
-      const optionValue = _.get(option, valueKey);
-      return value.includes(optionValue);
-    });
+  if (valueKey) {
+    let emptyValue;
+    if (multiple) {
+      emptyValue = [];
+    } else {
+      emptyValue = '';
+    }
+    const _value = value || emptyValue;
+    if (multiple) {
+      selected = options.filter(option => {
+        const optionValue = _.get(option, valueKey);
+        return _value.includes(optionValue);
+      });
+    } else {
+      selected = options.find(option => {
+        const optionValue = _.get(option, valueKey);
+        return _value === optionValue;
+      });
+    }
   } else {
-    selected = options.find(option => {
-      const optionValue = _.get(option, valueKey);
-      return value === optionValue;
-    });
+    selected = value;
   }
 
   return (

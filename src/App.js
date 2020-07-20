@@ -20,6 +20,7 @@ export default class App extends Component {
           firstname: 'satish',
           lastname: 'waghela'
         },
+        dummyname: ['Bob'],
         permission: { user: 'testuser1' },
         assignResp: ['Gilad Gray', 'Jason Killian'],
         gender: 'male',
