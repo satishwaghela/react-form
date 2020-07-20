@@ -30,6 +30,6 @@ export function MemoField (memoProps) {
         {...props}
       />
     );
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [fieldKeyPath, value, _.isEmpty(metaData) ? '' : metaData]);
 };

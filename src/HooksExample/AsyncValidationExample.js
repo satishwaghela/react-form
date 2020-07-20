@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { MemoFTextField } from '../FormHook/Fields/FTextField';
 import { requiredValidation } from './validations';
 
@@ -28,7 +29,11 @@ export default function AsyncValidationExample (props) {
         label: 'Username'
       }}
     />
-  )
+  );
 }
 
-const takenUsernames = ['satishwaghela']
+AsyncValidationExample.propTypes = {
+  form: PropTypes.object
+};
+
+const takenUsernames = ['satishwaghela', 'test', 'abc', 'asd', 'abc123'];

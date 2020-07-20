@@ -85,7 +85,7 @@ export default function useForm ({
         }
       });
     });
-  }
+  };
 
   const arrayItemAdd = (fieldKeyPath, value) => {
     setFormState((draftState) => {
@@ -109,7 +109,7 @@ export default function useForm ({
         metaData.children.splice(index, 1);
       }
     });
-  }
+  };
 
   const arrayItemShift = (fieldKeyPath, index, shiftToIndex) => {
     setFormState((draftState) => {
@@ -123,7 +123,7 @@ export default function useForm ({
         metaData.children.splice(shiftToIndex, 0, itemMetaData);
       }
     });
-  }
+  };
 
   const getFieldValidationDone = (fieldKeyPath) => {
     return _get(state.metaData, `${getFieldMetaDataPath(fieldKeyPath)}.validationDone`);
@@ -239,7 +239,7 @@ export default function useForm ({
       });
       validity.valid = !validity.invalidFields.length && !validity.validatingFields.length;
       callback(validity);
-    })
+    });
   };
 
   form.current.formState = state;

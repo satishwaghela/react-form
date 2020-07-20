@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import FObjectField from '../FormHook/Fields/FObjectField';
 import { MemoFTextField } from '../FormHook/Fields/FTextField';
@@ -10,11 +11,11 @@ export default function ObjectFieldExample (props) {
     <FObjectField
       form={form}
       fieldKeyPath='permission'
-      validation={(value = {}, formState, callback) => {
+      validation={(value = {}, formState, vCallback) => {
         if (!value.role && !value.user && !value.group) {
-          callback('Role/User/Group is required');
+          vCallback('Role/User/Group is required');
         } else {
-          callback();
+          vCallback();
         }
       }}
       Comp={ObjectComp}
@@ -22,7 +23,11 @@ export default function ObjectFieldExample (props) {
   );
 }
 
-function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) {
+ObjectFieldExample.propTypes = {
+  form: PropTypes.object
+};
+
+function ObjectComp ({ fieldKeyPath, form, helperText, onRef }) {
   const fieldKeyPathRole = fieldKeyPath + '.role';
   const fieldKeyPathUser = fieldKeyPath + '.user';
   const fieldKeyPathGroup = fieldKeyPath + '.group';
@@ -32,9 +37,6 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
         <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathRole}
-          onValueChange={(value) => {
-            validateObject();
-          }}
           TextFieldProps={{
             label: 'Role'
           }}
@@ -44,9 +46,6 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
         <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathUser}
-          onValueChange={(value) => {
-            validateObject();
-          }}
           TextFieldProps={{
             label: 'User'
           }}
@@ -56,9 +55,6 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
         <MemoFTextField
           form={form}
           fieldKeyPath={fieldKeyPathGroup}
-          onValueChange={(value) => {
-            validateObject();
-          }}
           TextFieldProps={{
             label: 'Group'
           }}
@@ -68,3 +64,10 @@ function ObjectComp ({ validateObject, fieldKeyPath, form, helperText, onRef }) 
     </>
   );
 }
+
+ObjectComp.propTypes = {
+  fieldKeyPath: PropTypes.string,
+  onRef: PropTypes.func,
+  form: PropTypes.object,
+  helperText: PropTypes.any
+};

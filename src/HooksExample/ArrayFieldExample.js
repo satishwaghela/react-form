@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FArrayField from '../FormHook/Fields/FArrayField';
 import FObjectField from '../FormHook/Fields/FObjectField';
 import { MemoFTextField } from '../FormHook/Fields/FTextField';
@@ -9,11 +10,11 @@ export default function ArrayFieldExample (props) {
     <FArrayField
       form={form}
       fieldKeyPath='access'
-      validation={(value = {}, formState, callback) => {
+      validation={(value = {}, formState, vCallback) => {
         if (!value || !value.length) {
-          callback('Required!');
+          vCallback('Required!');
         } else {
-          callback();
+          vCallback();
         }
       }}
       Comp={ArrayComp}
@@ -29,11 +30,14 @@ export default function ArrayFieldExample (props) {
   );
 }
 
-function ArrayComp ({ children, helperText, fieldKeyPath, form, onRef }) {
+ArrayFieldExample.propTypes = {
+  form: PropTypes.object
+};
 
+function ArrayComp ({ children, helperText, fieldKeyPath, form, onRef }) {
   const handleAdd = (e) => {
     form.arrayItemAdd(fieldKeyPath);
-  }
+  };
 
   return (
     <>
@@ -54,6 +58,14 @@ function ArrayComp ({ children, helperText, fieldKeyPath, form, onRef }) {
   );
 }
 
+ArrayComp.propTypes = {
+  children: PropTypes.any,
+  helperText: PropTypes.any,
+  fieldKeyPath: PropTypes.string,
+  onRef: PropTypes.func,
+  form: PropTypes.object
+};
+
 function ArrayItem (props) {
   const { fieldKeyPath, form, onRef, arrayFieldKeyPath, index } = props;
   return (
@@ -61,11 +73,11 @@ function ArrayItem (props) {
       form={form}
       fieldKeyPath={fieldKeyPath}
       ref={onRef}
-      validation={(value = {}, formState, callback) => {
+      validation={(value = {}, formState, vCallback) => {
         if (!value.role && !value.user && !value.group) {
-          callback('Role/User/Group is required');
+          vCallback('Role/User/Group is required');
         } else {
-          callback();
+          vCallback();
         }
       }}
       Comp={ArrayItemComp}
@@ -77,6 +89,14 @@ function ArrayItem (props) {
   );
 }
 
+ArrayItem.propTypes = {
+  fieldKeyPath: PropTypes.string,
+  onRef: PropTypes.func,
+  form: PropTypes.object,
+  arrayFieldKeyPath: PropTypes.string,
+  index: PropTypes.number
+};
+
 function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onRef, index }) {
   const fieldKeyPathRole = fieldKeyPath + '.role';
   const fieldKeyPathUser = fieldKeyPath + '.user';
@@ -84,15 +104,15 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
 
   const handleRemove = (e) => {
     form.arrayItemRemove(arrayFieldKeyPath, index);
-  }
+  };
 
   const handleShiftUp = (e) => {
     form.arrayItemShift(arrayFieldKeyPath, index, index - 1);
-  }
+  };
 
   const handleShiftDown = (e) => {
     form.arrayItemShift(arrayFieldKeyPath, index, index + 1);
-  }
+  };
 
   return (
     <tr ref={onRef}>
@@ -138,3 +158,12 @@ function ArrayItemComp ({ fieldKeyPath, arrayFieldKeyPath, form, helperText, onR
     </tr>
   );
 }
+
+ArrayItemComp.propTypes = {
+  fieldKeyPath: PropTypes.string,
+  onRef: PropTypes.func,
+  form: PropTypes.object,
+  arrayFieldKeyPath: PropTypes.string,
+  index: PropTypes.number,
+  helperText: PropTypes.any
+};
