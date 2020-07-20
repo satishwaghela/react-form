@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import useForm from '../FormHook';
@@ -12,11 +13,11 @@ import ObjectFieldExample from './ObjectFieldExample';
 import ArrayFieldExample from './ArrayFieldExample';
 import { requiredValidation } from './validations';
 
-export default function Example () {
+export default function Example (props) {
   const submitBtnRef = React.createRef();
 
   const form = useForm({
-    formData: {}
+    formData: props.formData
   });
 
   const { formState } = form;
@@ -160,3 +161,7 @@ export default function Example () {
     </>
   );
 }
+
+Example.propTypes = {
+  formData: PropTypes.object
+};
